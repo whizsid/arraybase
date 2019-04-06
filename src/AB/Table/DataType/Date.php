@@ -49,6 +49,7 @@ class Date implements DataType{
      * {@inherit}
      */
     public function validateMaxLength($max){
-        if($max>19) throw new ABException('The given length is exceed the available max length.',33);
+        // <ABE12> \\
+        if($max>19) throw new ABException('The given length is exceed the available max length.',12);
     }
 }

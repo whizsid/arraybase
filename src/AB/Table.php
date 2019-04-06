@@ -2,11 +2,12 @@
 
 namespace WhizSid\ArrayBase\AB;
 
-use WhizSid\ArrayBase\AB\Query\Select;
 use WhizSid\ArrayBase\ABException;
-use WhizSid\ArrayBase\AB\Aliasable;
+use WhizSid\ArrayBase\KeepAB;
+use WhizSid\ArrayBase\AB\Traits\Aliasable;
 
-class Table extends Aliasable{
+class Table extends KeepAB {
+    use Aliasable;
     /**
      * Table name
      *
@@ -16,7 +17,7 @@ class Table extends Aliasable{
     /**
      * Table columns
      *
-     * @var Table\Column[]
+     * @var Table\Column[]Aliasable
      */
     protected $columns = [];
     /**
@@ -27,7 +28,7 @@ class Table extends Aliasable{
     protected $data;
     /**
      * Creating a new table with a name
-     *
+     *Aliasable
      * @param string $name
      */
     public function __construct(string $name){
@@ -42,6 +43,8 @@ class Table extends Aliasable{
      */
     public function createColumn($str,$func){
         $col = new Table\Column($str);
+
+        $col->setAB($this->ab);
 
         $col->setTable($this);
 
@@ -60,7 +63,8 @@ class Table extends Aliasable{
      * @return \WhizSid\ArrayBase\AB\Table\Column
      */
     public function getColumn($str){
-        if(!isset($this->columns[$str])) throw new ABException('Can not find the column "'.$str.'"',23);
+        // <ABE2> \\
+        if(!isset($this->columns[$str])) throw new ABException('Can not find the column "'.$str.'"',2);
 
         return $this->columns[$str];
     }

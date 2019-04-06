@@ -4,17 +4,17 @@ namespace WhizSid\ArrayBase;
 
 class AB {
     /**
-     * Created queries
-     *
-     * @var AB\Query[]
-     */
-    protected $queries = [];
-    /**
      * Created Tables
      *
      * @var \WhizSid\ArrayBase\AB\Table[] $tables
      */
     protected $tables = [];
+    /**
+     * Last query that executed
+     *
+     * @var Query
+     */
+    protected $lastQuery;
     /**
      * Creating a new table
      *
@@ -24,6 +24,9 @@ class AB {
      */
     public function createTable(string $name,$func){
         $tbl = new AB\Table($name);
+
+        $tbl->setAB($this);
+
         $this->tables[$name] = $tbl;
 
         $func($tbl);
@@ -37,27 +40,10 @@ class AB {
      * @return AB\Table
      */
     public function getTable($name){
+        // <ABE1> \\
         if(!isset($this->tables[$name])) throw new ABException('Can not find the table "'.$name.'"',1);
 
         return $this->tables[$name];
-    }
-    /**
-     * Creating a new query
-     *
-     * @return AB\Query
-     */
-    public function query(){
-        $query =  new AB\Query($this);
-        $this->queries[] =  $query;
-        return $query;
-    }
-    /**
-     * Returning the last query
-     * 
-     * @return AB\Query
-     */
-    public function lastQuery(){
-        return $this->queries[count($this->queries)-1];
     }
     /**
      * Short way to get a table by name
@@ -67,5 +53,19 @@ class AB {
      */
     public function __get($str){
         return $this->getTable($str);
+    }
+    /**
+     * Creating a query and returning
+     *
+     * @return Query
+     */
+    public function query(){
+        $query = new Query();
+
+        $query->setAB($this);
+
+        $this->lastQuery = $query;
+
+        return $query;
     }
 }

@@ -3,9 +3,13 @@
 namespace WhizSid\ArrayBase\AB\Table;
 
 use WhizSid\ArrayBase\ABException;
-use WhizSid\ArrayBase\AB\Aliasable;
+use WhizSid\ArrayBase\KeepAB;
+use WhizSid\ArrayBase\AB\Traits\Aliasable;
 
-class Column extends Aliasable{
+class Column extends KeepAB {
+    
+    use Aliasable;
+
     const COMMENT_MAX_LENGTH = 100;
     /**
      * Type of the parent
@@ -107,7 +111,8 @@ class Column extends Aliasable{
         $this->validateName();
 
         if(!in_array($str,array_keys($this->dataTypeAliases)))
-            throw new ABException('Invalid type "'.$str.'" for column "'.$this->name.'". Available types is '.implode(',',array_keys($this->dataTypeAliases)),24);
+            // <ABE3> \\
+            throw new ABException('Invalid type "'.$str.'" for column "'.$this->name.'". Available types is '.implode(',',array_keys($this->dataTypeAliases)),3);
 
         $typeFullName = '\WhizSid\ArrayBase\AB\Table\DataType\\'.$this->dataTypeAliases[$str];
 
@@ -131,7 +136,8 @@ class Column extends Aliasable{
      */
     protected function validateName(){
         if(!isset($this->name)) 
-            throw new ABException('Please set a name to the column.',25); 
+            // <ABE4> \\
+            throw new ABException('Please set a name to the column.',4); 
     }
     /**
      * Validating type
@@ -141,7 +147,8 @@ class Column extends Aliasable{
      */
     protected function validateType(){
         if(!isset($this->type)) 
-            throw new ABException('Please set a type to the column.',26); 
+            // <ABE5> \\
+            throw new ABException('Please set a type to the column.',5); 
     }
     /**
      * Validating column required properties
@@ -203,13 +210,16 @@ class Column extends Aliasable{
     public function validateValue($value){
 
         if(!is_null($value)&&!$this->type->validate($value))
-            throw new ABException('Invalid value provided to column. The value should be in "'.$this->type->getName().'" type.',27);
+            // <ABE6> \\
+            throw new ABException('Invalid value provided to column. The value should be in "'.$this->type->getName().'" type.',6);
     
         if(!is_null($value)&&$this->maxLength<strlen($value))
-            throw new ABException('Supplied value is greater than the max length.',28);
+            // <ABE7> \\
+            throw new ABException('Supplied value is greater than the max length.',7);
 
         if(!$this->nullable&&is_null($value))
-            throw new ABException('Empty value supplied to non nullable column.',29);
+            // <ABE8> \\
+            throw new ABException('Empty value supplied to non nullable column.',8);
     }
     /**
      * Getting default value for column
@@ -233,7 +243,8 @@ class Column extends Aliasable{
     public function setAutoIncrement(bool $ai=true){
         $this->validate();
 
-        if($this->type->getName()!=='integer') throw new ABException('We are allowing auto increment only for integer type columns',30);
+        // <ABE9> \\
+        if($this->type->getName()!=='integer') throw new ABException('We are allowing auto increment only for integer type columns',9);
 
         $this->autoIncrement = $ai;
     }
@@ -255,7 +266,8 @@ class Column extends Aliasable{
     public function setNullable(bool $nl=true){
         $this->validate();
 
-        if($this->autoIncrement) throw new ABException('We are not allowing to set nullable on auto incrementing columns',31);
+        // <ABE10> \\
+        if($this->autoIncrement) throw new ABException('We are not allowing to set nullable on auto incrementing columns',10);
 
         $this->nullable = $nl;
     }
@@ -275,7 +287,8 @@ class Column extends Aliasable{
     public function writeComment($cmnt){
         $this->validate();
 
-        if(strlen($cmnt)>self::COMMENT_MAX_LENGTH) throw new ABException('The comment max character length is '.self::COMMENT_MAX_LENGTH.'. Please summerize your comment.',32);
+        // <ABE11> \\
+        if(strlen($cmnt)>self::COMMENT_MAX_LENGTH) throw new ABException('The comment max character length is '.self::COMMENT_MAX_LENGTH.'. Please summerize your comment.',11);
 
         $this->comment = substr($cmnt,0,self::COMMENT_MAX_LENGTH);
     }

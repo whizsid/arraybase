@@ -49,6 +49,7 @@ class VarChar implements DataType{
      * {@inherit}
      */
     public function validateMaxLength($max){
-        if($max>500) throw new ABException('The given length is exceed the available max length.',35);
+        // <ABE14> \\
+        if($max>500) throw new ABException('The given length is exceed the available max length.',14);
     }
 }

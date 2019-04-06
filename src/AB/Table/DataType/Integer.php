@@ -47,6 +47,7 @@ class Integer implements DataType{
      * {@inherit}
      */
     public function validateMaxLength($max){
-        if($max>256) throw new ABException('The given length is exceed the available max length.',34);
+        // <ABE13> \\
+        if($max>256) throw new ABException('The given length is exceed the available max length.',13);
     }
 }
