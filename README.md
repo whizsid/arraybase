@@ -45,19 +45,29 @@ $results = $query->select('table_name','column_1','column_2')->execute();
 ```
 use WhizSid\ArrayBase\AB\Query\Clause\Join;
 
-$results = $query->select(
-        $ab->table_1,
-        $ab->table_1->column_1,
-        $ab->table_2->column_2
-    )
-    ->join('inner',function(Join $join)use($ab){
-        $join->table($ab->table_2);
-        $join->on(function($on)use($ab){
-            $on->and($ab->table_2->column1,$ab->table_1->column2);
-        });
-    });
+$query = $ab->query();
+
+$select = $query->select($ab->tbl_customer->as('cus'));
+
+$select->join($ab->tbl_customer_cv->as('cv'))->on($query->cv->c_id,$query->cus->c_id);
+
+$results = $select->execute();
 ```
 
+## Where Clause
+```
+$select->where($query->cus->c_id,"4567")->and($query->cv->c_name,"my name");
+```
+
+## Limit
+```
+$select->limit(10,20);
+```
+
+## Order
+```
+$select->orderBy($query->cus->c_name)->orderBy($query->cus->c_address,"desc");
+```
 ## Contribute
 
 Currently I haven't an extra time to develop this. Email me on rameshkithsirihettiarachchi@gmail.com if you like to contribute this project.
