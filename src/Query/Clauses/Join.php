@@ -1,10 +1,10 @@
 <?php
-namespace WhizSid\ArrayBase\Query\Clause;
+namespace WhizSid\ArrayBase\Query\Clauses;
 
 use WhizSid\ArrayBase\KeepQuery;
 use WhizSid\ArrayBase\AB\Table;
 use WhizSid\ArrayBase\ABException;
-use WhizSid\ArrayBase\Query\Clause\On;
+use WhizSid\ArrayBase\Query\Clauses\On;
 
 class Join extends KeepQuery{
     protected $mode;
@@ -41,13 +41,14 @@ class Join extends KeepQuery{
     /**
      * Creating the on clause
      * 
-     * @param callback<On>
-     * @return self
+     * @param mixed $leftSide
+     * @param mixed $operator
+     * @param mixed $rightSide
+     * @return On
      */
-    public function on($func){
-        $on = new On();
+    public function on($leftSide,$operator,$rightSide=null){
+        $on = new On($leftSide,$operator,$rightSide);
         $on->setQuery($this->query)->setAB($this->ab);
-        $func($on);
-        return $this;
+        return $on;
     }
 }

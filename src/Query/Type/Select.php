@@ -4,8 +4,13 @@ namespace WhizSid\ArrayBase\Query\Type;
 use WhizSid\ArrayBase\KeepQuery;
 use WhizSid\ArrayBase\AB\Table;
 use WhizSid\ArrayBase\AB\Table\Column;
+use WhizSid\ArrayBase\Query\Traits\Joinable;
+use WhizSid\ArrayBase\Query\Traits\Whereable;
+use WhizSid\ArrayBase\Query\Traits\Limitable;
+use WhizSid\ArrayBase\Query\Traits\Orderable;
 
 class Select extends KeepQuery {
+    use Joinable,Whereable,Limitable,Orderable;
     /**
      * Table tha in from clause
      *
@@ -55,5 +60,4 @@ class Select extends KeepQuery {
     public function getColumns(){
         return $this->columns;
     }
-
 }

@@ -1,5 +1,5 @@
 <?php
-namespace WhizSid\ArrayBase\Query;
+namespace WhizSid\ArrayBase\Query\Helpers;
 
 class Alias {
     protected $object;

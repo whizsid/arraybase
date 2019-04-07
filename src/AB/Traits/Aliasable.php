@@ -1,7 +1,7 @@
 <?php
 namespace WhizSid\ArrayBase\AB\Traits;
 
-use WhizSid\ArrayBase\Query\Alias;
+use WhizSid\ArrayBase\Query\Helpers\Alias;
 
 
 trait Aliasable {

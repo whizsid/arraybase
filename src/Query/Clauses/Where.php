@@ -1,5 +1,5 @@
 <?php
-namespace WhizSid\ArrayBase\Query\Clause;
+namespace WhizSid\ArrayBase\Query\Clauses;
 
 use WhizSid\ArrayBase\KeepQuery;
 use WhizSid\ArrayBase\Query\Objects\Comparison;
