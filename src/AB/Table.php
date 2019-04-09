@@ -2,6 +2,18 @@
 
 namespace WhizSid\ArrayBase\AB;
 
+/*__________________ PHP ArrayBase ______________________
+\ This is an open source project to properly manage your |
+/ PHP array data. You can use SQL like functions to PHP  |
+\ arrays with this library.                              |
+/ This is an open source library and you can change or   |
+\ republish this library. Please give credits to author  |
+/ when you publish this library in another place without |
+\ permissions. Thank you to look into my codes.          |
+/ ------------------- 2019 - WhizSid --------------------|
+\_________________________________________________________
+*/
+
 use WhizSid\ArrayBase\ABException;
 use WhizSid\ArrayBase\KeepAB;
 use WhizSid\ArrayBase\AB\Traits\Aliasable;
@@ -20,12 +32,6 @@ class Table extends KeepAB {
      * @var Table\Column[]Aliasable
      */
     protected $columns = [];
-    /**
-     * Table data store
-     *
-     * @var Set
-     */
-    protected $data;
     /**
      * Creating a new table with a name
      *Aliasable
@@ -69,14 +75,6 @@ class Table extends KeepAB {
         return $this->columns[$str];
     }
     /**
-     * Getting the table name
-     * 
-     * @return string
-     */
-    public function getName(){
-        return $this->name;
-    }
-    /**
      * Getting all columns
      * 
      * @return \WhizSid\ArrayBase\AB\Table\Column[]
@@ -94,11 +92,27 @@ class Table extends KeepAB {
         return $this->getColumn($str);
     }
     /**
-     * Getting all data
-     * 
-     * @return Set
+     * Setting the columns to table
+     *
+     * @param Table\Column[] $columns
      */
-    public function getData(){
-        return $this->data;
+    public function setColumns($columns){
+        $this->columns = $columns;
+    }
+
+    public function cloneMe(){
+        $columns = $this->columns;
+
+        $clonedMe = clone $this;
+
+        foreach($columns as $key=>$column){
+            $newColumn = $column->cloneMe();
+            $newColumn->setTable($clonedMe);
+            $columns[$key] = $newColumn;
+        }
+
+        $clonedMe->setColumns($columns);
+
+        return $clonedMe;
     }
 }

@@ -1,10 +1,21 @@
 <?php
 namespace WhizSid\ArrayBase;
 
+/*__________________ PHP ArrayBase ______________________
+\ This is an open source project to properly manage your |
+/ PHP array data. You can use SQL like functions to PHP  |
+\ arrays with this library.                              |
+/ This is an open source library and you can change or   |
+\ republish this library. Please give credits to author  |
+/ when you publish this library in another place without |
+\ permissions. Thank you to look into my codes.          |
+/ ------------------- 2019 - WhizSid --------------------|
+\_________________________________________________________
+*/
+
 use WhizSid\ArrayBase\AB\Table;
 use WhizSid\ArrayBase\AB\Table\Column;
 use WhizSid\ArrayBase\Query\Type\Select;
-use WhizSid\ArrayBase\Query\Alias;
 
 class Query extends KeepAB {
     protected $tables = [];
@@ -32,13 +43,13 @@ class Query extends KeepAB {
      * @return void
      */
     public function addTable($table){
-        $this->tables[$table->getAlias()] = $table;
+        $this->tables[$table->getName()] = $table;
     }
     /**
      * Returning the table by name
      *
      * @param string $name
-     * @return Alias|Table
+     * @return Table
      */
     public function __get($name)
     {

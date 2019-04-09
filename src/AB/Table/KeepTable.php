@@ -1,5 +1,5 @@
 <?php
-namespace WhizSid\ArrayBase\Query\Traits;
+namespace WhizSid\ArrayBase\AB\Table;
 
 /*__________________ PHP ArrayBase ______________________
 \ This is an open source project to properly manage your |
@@ -13,30 +13,30 @@ namespace WhizSid\ArrayBase\Query\Traits;
 \_________________________________________________________
 */
 
-use WhizSid\ArrayBase\Query\Clauses\Join;
-use WhizSid\ArrayBase\AB\Table;
+use WhizSid\ArrayBase\KeepAB;
 
-trait Joinable {
-    protected $joins = [];
+class KeepTable extends KeepAB{
     /**
-     * Joining tables
+     * Table of the column
      *
-     * @param string $mode
-     * @param Table $tbl
-     * @return self
+     * @var \WhizSid\ArrayBase\AB\Table
      */
-    public function join($mode,$tbl=null){
-        if(!$tbl){
-            $tbl = $mode;
-            $mode = null;
-        }
-
-        $join = new Join($mode);
-
-        $join->setAB($this->ab)->setQuery($this->query);
-
-        $join->setTable($tbl);
-
-        return $join;
+    protected $table;
+    /**
+     * Setting table
+     *
+     * @param \WhizSid\ArrayBase\AB\Table $tbl
+     * @return void
+     */
+    public function setTable($tbl){
+        $this->table = $tbl;
+    }
+    /**
+     * Getting the table
+     *
+     * @return \WhizSid\ArrayBase\AB\Table
+     */
+    public function getTable(){
+        return $this->table;
     }
 }

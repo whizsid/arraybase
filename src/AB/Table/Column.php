@@ -2,33 +2,32 @@
 
 namespace WhizSid\ArrayBase\AB\Table;
 
+/*__________________ PHP ArrayBase ______________________
+\ This is an open source project to properly manage your |
+/ PHP array data. You can use SQL like functions to PHP  |
+\ arrays with this library.                              |
+/ This is an open source library and you can change or   |
+\ republish this library. Please give credits to author  |
+/ when you publish this library in another place without |
+\ permissions. Thank you to look into my codes.          |
+/ ------------------- 2019 - WhizSid --------------------|
+\_________________________________________________________
+*/
+
 use WhizSid\ArrayBase\ABException;
-use WhizSid\ArrayBase\KeepAB;
 use WhizSid\ArrayBase\AB\Traits\Aliasable;
 
-class Column extends KeepAB {
+class Column extends KeepTable {
     
     use Aliasable;
 
     const COMMENT_MAX_LENGTH = 100;
-    /**
-     * Type of the parent
-     *
-     * @var string
-     */
-    protected $parentType='table';
     /**
      * Column Type
      *
      * @var DataType\DataType
      */
     protected $type;
-    /**
-     * Column name
-     *
-     * @var string
-     */
-    protected $name = null;
     /**
      * Use When a column is auto increment
      *
@@ -70,35 +69,12 @@ class Column extends KeepAB {
      */
     protected $comment;
     /**
-     * Table of the column
-     *
-     * @var \WhizSid\ArrayBase\AB\Table
-     */
-    protected $table;
-    /**
      * Creating a column to a table
      *
      * @param string $name
      */
     public function __construct($name){
         $this->name = $name;
-    }
-    /**
-     * Setting table for the column
-     *
-     * @param \WhizSid\ArrayBase\AB\Table $tbl
-     * @return void
-     */
-    public function setTable($tbl){
-        $this->table = $tbl;
-    }
-    /**
-     * Getting the table
-     *
-     * @return \WhizSid\ArrayBase\AB\Table
-     */
-    public function getTable(){
-        return $this->table;
     }
     /**
      * Setting column type
@@ -301,13 +277,5 @@ class Column extends KeepAB {
         $this->validate();
 
         return $this->comment;
-    }
-    /**
-     * Getting the column name
-     * 
-     * @return string
-     */
-    public function getName(){
-        return $this->name;
     }
 }

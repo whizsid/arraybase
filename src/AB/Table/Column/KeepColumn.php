@@ -1,5 +1,6 @@
 <?php
-namespace WhizSid\ArrayBase\Query\Traits;
+
+namespace WhizSid\ArrayBase\AB\Table\Column;
 
 /*__________________ PHP ArrayBase ______________________
 \ This is an open source project to properly manage your |
@@ -13,30 +14,30 @@ namespace WhizSid\ArrayBase\Query\Traits;
 \_________________________________________________________
 */
 
-use WhizSid\ArrayBase\Query\Clauses\Join;
-use WhizSid\ArrayBase\AB\Table;
+use WhizSid\ArrayBase\AB\Table\Column;
 
-trait Joinable {
-    protected $joins = [];
+class KeepColumn {
     /**
-     * Joining tables
+     * Column instance to the given cell
      *
-     * @param string $mode
-     * @param Table $tbl
-     * @return self
+     * @var Column
      */
-    public function join($mode,$tbl=null){
-        if(!$tbl){
-            $tbl = $mode;
-            $mode = null;
-        }
-
-        $join = new Join($mode);
-
-        $join->setAB($this->ab)->setQuery($this->query);
-
-        $join->setTable($tbl);
-
-        return $join;
+    protected $column;
+    /**
+     * Setting the column instance
+     *
+     * @param Column $column
+     * @return void
+     */
+    public function setColumn($column){
+        $this->column = $column;
+    }
+    /**
+     * Returning the column instance
+     *
+     * @return Column
+     */
+    public function getColumn($column){
+        $this->column = $column;
     }
 }
