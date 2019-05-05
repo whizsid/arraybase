@@ -35,14 +35,16 @@ $query = $ab->query();
 
 $inserted = $query->insert()->into($ab->tbl_customer)->values([
 	[
-		'c_id'=>1,
 		'c_name'=>"Customer 1",
 		'c_address'=>'customer address 1'
 	],
 	[
-		'c_id'=>2,
 		'c_name'=>'Customer 2',
 		"c_address"=>'customer address 2'
 	]
 ])->execute()->fetchAssoc();
 
+echo '<pre>';
+var_dump($ab->tbl_customer->__getDataSet()->fetchAssoc());
+echo '</pre>';
+die;

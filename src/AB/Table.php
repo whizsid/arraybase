@@ -141,10 +141,6 @@ class Table extends KeepAB{
 	public function insertDataSet($set){
 		$aliases = $set->getAliases();
 
-		if(count($aliases)!=count($this->columnNames))
-			// <ABE19> \\
-			throw new ABException("Column counts not matching for the new data set",19);
-
 		foreach ($aliases as $alias) {
 			if(array_search($alias,$this->columnNames)<0)
 				// <ABE20> \\
@@ -180,12 +176,18 @@ class Table extends KeepAB{
 				$srcIndex = array_search($originalAlias,$aliases);
 				$column = $this->getColumn($originalAlias);
 
-				if($srcIndex>=0)
+				if(is_numeric($srcIndex)){
 					$value = $oldRow->getCell($srcIndex)->getValue();
-				else
+				}
+				else if($column->isAutoIncrement()){
+					$value = $newRow->getIndex()+1;
+				}
+				else {
 					$value = $column->getDefaultValue();
+				}
 
 				$newRow->newCell($value);
+
 			}
 		}
 
