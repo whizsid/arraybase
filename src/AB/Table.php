@@ -148,19 +148,7 @@ class Table extends KeepAB{
 		}
 
 		$rowCount = $set->getCount();
-		// validation
-		for ($i=0; $i < $rowCount; $i++) { 
-			$row = $set->getByIndex($i);
-			
-			foreach ($aliases as $index => $alias) {
-				$cell = $row->getCell($index);
-
-				$column = $this->columns[$alias];
-
-				$column->validateValue($cell->getValue());
-
-			}
-		}
+		
 		// Creating a new data set
 		$newSet = new DataSet();
 
@@ -176,15 +164,19 @@ class Table extends KeepAB{
 				$srcIndex = array_search($originalAlias,$aliases);
 				$column = $this->getColumn($originalAlias);
 
+				$value = null;
 				if(is_numeric($srcIndex)){
-					$value = $oldRow->getCell($srcIndex)->getValue();
+					$cell = $oldRow->getCell($srcIndex);
+					$value = $cell?$cell->getValue():null;
 				}
 				else if($column->isAutoIncrement()){
 					$value = $newRow->getIndex()+1;
 				}
-				else {
+
+				if(is_null($value))
 					$value = $column->getDefaultValue();
-				}
+
+				$column->validateValue($value);
 
 				$newRow->newCell($value);
 

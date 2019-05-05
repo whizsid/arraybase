@@ -19,17 +19,21 @@ class AB {
      * Creating a new table
      *
      * @param string $name
-     * @param callback<\WhizSid\ArrayBase\AB\Table> $func
+     * @param callback<\WhizSid\ArrayBase\AB\Table>|array $func
      * @return self
      */
-    public function createTable(string $name,$func){
-        $tbl = new AB\Table($name);
+    public function createTable($name,$funcOrArr){
+        if (!is_array($funcOrArr)) {
+            $tbl = new AB\Table($name);
 
-        $tbl->setAB($this);
+            $tbl->setAB($this);
 
-        $this->tables[$name] = $tbl;
+            $this->tables[$name] = $tbl;
 
-        $func($tbl);
+            $funcOrArr($tbl);
+        } else {
+			Helper::parseTable($this,$name,$funcOrArr);
+		}
 
         return $this;
     }
