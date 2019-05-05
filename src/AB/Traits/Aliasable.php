@@ -1,19 +1,18 @@
 <?php
 namespace WhizSid\ArrayBase\AB\Traits;
 
-/*__________________ PHP ArrayBase ______________________
-\ This is an open source project to properly manage your |
-/ PHP array data. You can use SQL like functions to PHP  |
-\ arrays with this library.                              |
-/ This is an open source library and you can change or   |
-\ republish this library. Please give credits to author  |
-/ when you publish this library in another place without |
-\ permissions. Thank you to look into my codes.          |
-/ ------------------- 2019 - WhizSid --------------------|
-\_________________________________________________________
-*/
-
 trait Aliasable {
+	/**
+	 * Weather that given instance is aliased or not
+	 *
+	 * @var boolean
+	 */
+	protected $aliased;
+	/**
+	 * Name for the instance
+	 *
+	 * @var string
+	 */
     protected $name;
     /**
      * Make a aliased instance with this
@@ -24,7 +23,9 @@ trait Aliasable {
     public function as($alias){
         $cloned = $this->cloneMe();
 
-        $cloned->setName($alias);
+		$cloned->setName($alias);
+		
+		$cloned->__setAliased();
 
         return $cloned;
     }
@@ -51,5 +52,21 @@ trait Aliasable {
      */
     public function cloneMe(){
         return clone $this;
-    }
+	}
+	/**
+	 * Checking the instance is aliased or not
+	 * 
+	 * @return boolean
+	 */
+	public function isAliased(){
+		return $this->aliased;
+	}
+	/**
+	 * Seting the aliased status
+	 * 
+	 * @param boolean $aliased
+	 */
+	public function __setAliased($aliased = true){
+		$this->aliased = $aliased;
+	}
 }

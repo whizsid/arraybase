@@ -1,18 +1,6 @@
 <?php
 require_once "../vendor/autoload.php";
 
-/*__________________ PHP ArrayBase ______________________
-\ This is an open source project to properly manage your |
-/ PHP array data. You can use SQL like functions to PHP  |
-\ arrays with this library.                              |
-/ This is an open source library and you can change or   |
-\ republish this library. Please give credits to author  |
-/ when you publish this library in another place without |
-\ permissions. Thank you to look into my codes.          |
-/ ------------------- 2019 - WhizSid --------------------|
-\_________________________________________________________
-*/
-
 use WhizSid\ArrayBase\AB;
 use WhizSid\ArrayBase\AB\Table;
 use WhizSid\ArrayBase\AB\Table\Column;
@@ -45,12 +33,16 @@ echo "ArrayBase Table 'tbl_customer' created";
 
 $query = $ab->query();
 
-$select = $query->select($ab->tbl_customer->as('m'));
+$inserted = $query->insert()->into($ab->tbl_customer)->values([
+	[
+		'c_id'=>1,
+		'c_name'=>"Customer 1",
+		'c_address'=>'customer address 1'
+	],
+	[
+		'c_id'=>2,
+		'c_name'=>'Customer 2',
+		"c_address"=>'customer address 2'
+	]
+])->execute()->fetchAssoc();
 
-$select->join($query->m)->on($query->m->c_id,$query->m->c_name);
-
-$select->where($query->m->c_id,"jnjn")->and($query->m->c_name,"jnjnj");
-
-$select->limit(10,20);
-
-$select->orderBy($query->m->c_name)->orderBy($query->m->c_address,"desc");

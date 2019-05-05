@@ -2,44 +2,50 @@
 
 namespace WhizSid\ArrayBase;
 
-/*__________________ PHP ArrayBase ______________________
-\ This is an open source project to properly manage your |
-/ PHP array data. You can use SQL like functions to PHP  |
-\ arrays with this library.                              |
-/ This is an open source library and you can change or   |
-\ republish this library. Please give credits to author  |
-/ when you publish this library in another place without |
-\ permissions. Thank you to look into my codes.          |
-/ ------------------- 2019 - WhizSid --------------------|
-\_________________________________________________________
-*/
+use WhizSid\ArrayBase\AB\DataSet;
 
 class Helper {
-    /**
-     * Checking the supplied argument is a column of a table
-     *
-     * @param mixed $var
-     * @return boolean
-     */
-    public static function isColumn($var){
-        return is_object($var)&&get_class($var)=='WhizSid\ArrayBase\AB\Table\Column';
-    }
-    /**
-     * Checking the supplied argument is a table
-     *
-     * @param mixed $var
-     * @return boolean
-     */
-    public static function isTable($var){
-        return is_object($var)&&get_class($var)=='WhizSid\ArrayBase\AB\Table';
-    }
-    /**
-     * Checking for select query
-     * 
-     * @param mixed $var
-     * @return boolean
-     */
-    public static function isSelect($var){
-        return is_object($var)&&get_class($var)=='WhizSid\ArrayBase\AB\Query\Select';
-    }
+	/**
+	 * Parsing data array to dataset
+	 *
+	 * @param array $arr
+	 * @return DataSet
+	 */
+	public static function parseDataArray($arr){
+		$dataSet = new DataSet;
+
+		$keys = array_keys($arr);
+
+		if(is_numeric($keys[0])){
+			$secondKeys = array_keys($arr[$keys[0]]);
+			if(is_string($secondKeys[0])){
+				foreach ($arr as $key => $row) {
+					$dataSetRow = $dataSet->newRow();
+
+					foreach($row as $secondKey=>$cell){
+						if($key==0)
+							$dataSet->addAlias($secondKey);
+
+						$dataSetRow->newCell($cell)	;
+					}
+				}
+			} else {
+				// <ABE17> \\
+				throw new ABException("Suplied array format is invalid to parseDataArray.",17);
+			}
+		} else if(is_string($keys[0])){
+			$row = $dataSet->newRow();
+
+			foreach($arr as $cellName=>$value){
+				$dataSet->addAlias($cellName);
+
+				$row->newCell($value);
+			}
+		} else {
+			// <ABE17> \\
+			throw new ABException("Suplied array format is invalid to parseDataArray.",17);
+		}
+
+		return $dataSet;
+	}
 }

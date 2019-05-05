@@ -2,23 +2,12 @@
 
 namespace WhizSid\ArrayBase\AB;
 
-/*__________________ PHP ArrayBase ______________________
-\ This is an open source project to properly manage your |
-/ PHP array data. You can use SQL like functions to PHP  |
-\ arrays with this library.                              |
-/ This is an open source library and you can change or   |
-\ republish this library. Please give credits to author  |
-/ when you publish this library in another place without |
-\ permissions. Thank you to look into my codes.          |
-/ ------------------- 2019 - WhizSid --------------------|
-\_________________________________________________________
-*/
-
 use WhizSid\ArrayBase\ABException;
 use WhizSid\ArrayBase\KeepAB;
 use WhizSid\ArrayBase\AB\Traits\Aliasable;
+use WhizSid\ArrayBase\AB\DataSet;
 
-class Table extends KeepAB {
+class Table extends KeepAB{
     use Aliasable;
     /**
      * Table name
@@ -29,16 +18,31 @@ class Table extends KeepAB {
     /**
      * Table columns
      *
-     * @var Table\Column[]Aliasable
+     * @var Table\Column[]
      */
-    protected $columns = [];
+	protected $columns = [];
+	/**
+	 * Column names and indexes
+	 *
+	 * @var string[]
+	 */
+	protected $columnNames = [];
+	/**
+	 * Dataset for the given table
+	 *
+	 * @var DataSet
+	 */
+	protected $dataSet;
     /**
      * Creating a new table with a name
      *Aliasable
      * @param string $name
      */
     public function __construct(string $name){
-        $this->name = $name;
+		$this->name = $name;
+		$this->dataSet = new DataSet();
+		$this->dataSet->setAB($this->ab);
+		$this->dataSet->setName($this->name);
     }
     /**
      * Create a column to table
@@ -52,13 +56,22 @@ class Table extends KeepAB {
 
         $col->setAB($this->ab);
 
-        $col->setTable($this);
+		$col->setTable($this);
+		
+		$index = count($this->columnNames);
 
         $this->columns[$str] = $col;
 
-        $func($col);
+		$func($col);
 
-        $col->validate();
+		$col->setIndex($index);
+		$this->columnNames[] = $col->getName();
+
+		$col->validate();
+
+		$value = $col->getDefaultValue();
+
+		$this->dataSet->newColumn($str,$value);
 
         return $this;
     }
@@ -96,14 +109,18 @@ class Table extends KeepAB {
      *
      * @param Table\Column[] $columns
      */
-    public function setColumns($columns){
-        $this->columns = $columns;
-    }
-
+    public function __setColumns($columns){
+		$this->columns = $columns;
+	}
+	/**
+	 * Clone the table to new one
+	 *
+	 * @return self
+	 */
     public function cloneMe(){
         $columns = $this->columns;
 
-        $clonedMe = clone $this;
+		$clonedMe = clone $this;
 
         foreach($columns as $key=>$column){
             $newColumn = $column->cloneMe();
@@ -111,8 +128,78 @@ class Table extends KeepAB {
             $columns[$key] = $newColumn;
         }
 
-        $clonedMe->setColumns($columns);
+        $clonedMe->__setColumns($columns);
 
         return $clonedMe;
-    }
+	}
+	/**
+	 * Insert a new data set
+	 *
+	 * @param DataSet $set
+	 * @return void
+	 */
+	public function insertDataSet($set){
+		$aliases = $set->getAliases();
+
+		if(count($aliases)!=count($this->columnNames))
+			// <ABE19> \\
+			throw new ABException("Column counts not matching for the new data set",19);
+
+		foreach ($aliases as $alias) {
+			if(array_search($alias,$this->columnNames)<0)
+				// <ABE20> \\
+				throw new ABException("Invalid column name '$alias' in new Dataset.",20);
+		}
+
+		$rowCount = $set->getCount();
+		// validation
+		for ($i=0; $i < $rowCount; $i++) { 
+			$row = $set->getByIndex($i);
+			
+			foreach ($aliases as $index => $alias) {
+				$cell = $row->getCell($index);
+
+				$column = $this->columns[$alias];
+
+				$column->validateValue($cell->getValue());
+
+			}
+		}
+		// Creating a new data set
+		$newSet = new DataSet();
+
+		$originalAliases = $this->dataSet->getAliases();
+
+		for ($i=0; $i < $rowCount; $i++) { 
+			$newRow = $newSet->newRow();
+			$oldRow = $set->getByIndex($i);
+
+			foreach ($originalAliases as $key => $originalAlias) {
+				if($i==0)
+					$newSet->addAlias($originalAlias);
+				$srcIndex = array_search($originalAlias,$aliases);
+				$column = $this->getColumn($originalAlias);
+
+				if($srcIndex>=0)
+					$value = $oldRow->getCell($srcIndex)->getValue();
+				else
+					$value = $column->getDefaultValue();
+
+				$newRow->newCell($value);
+			}
+		}
+
+		$this->dataSet->mergeDataSet($newSet);
+
+		return $this->dataSet->getCount()-1;
+
+	}
+	/**
+	 * Returning the data set
+	 * 
+	 * @return DataSet
+	 */
+	public function __getDataSet(){
+		return $this->dataSet;
+	}
 }
