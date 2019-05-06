@@ -27,20 +27,20 @@ $ab->createTable('tbl_customer',[
 
 echo "ArrayBase Table 'tbl_customer' created";
 
-// $query = $ab->query();
+$query = $ab->query();
 
-// $inserted = $query->insert()->into($ab->tbl_customer)->values([
-// 	[
-// 		'c_id'=>1,
-// 		'c_name'=>"Customer 1",
-// 		'c_address'=>'customer address 1'
-// 	],
-// 	[
-// 		'c_id'=>2,
-// 		'c_name'=>null,
-// 		"c_address"=>'customer address 2'
-// 	]
-// ])->execute()->fetchAssoc();
+$inserted = $query->insert()->into($ab->tbl_customer)->values([
+	[
+		'c_id'=>3,
+		'c_name'=>"Customer 3",
+		'c_address'=>'customer address 3'
+	],
+	[
+		'c_id'=>4,
+		'c_name'=>null,
+		"c_address"=>'customer address 4'
+	]
+])->execute()->fetchAssoc();
 
 echo '<pre>';
 var_dump($ab->tbl_customer->__getDataSet()->fetchAssoc());
