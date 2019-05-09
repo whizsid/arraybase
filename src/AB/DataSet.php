@@ -6,10 +6,9 @@ use WhizSid\ArrayBase\AB\DataSet\Row;
 use WhizSid\ArrayBase\KeepAB;
 use WhizSid\ArrayBase\ABException;
 use WhizSid\ArrayBase\AB\DataSet\Row\Cell;
+use WhizSid\ArrayBase\AB\Table\Column;
 
 class DataSet extends KeepAB{
-
-	use Aliasable;
     /**
      * Storing data rows as an array
      *
@@ -73,7 +72,7 @@ class DataSet extends KeepAB{
 	 * @return void
 	 */
 	public function renameAlias($from,$to){
-		$index = array_search($from,$this->aliases);
+		$index = $this->searchAlias($from);
 
 		if($index>=0){
 			$this->aliases[$index] = $to;
@@ -114,13 +113,27 @@ class DataSet extends KeepAB{
 		$this->rows = array_merge($this->rows,$rows);
 	}
 	/**
+	 * Fixing another data set with the data set
+	 *
+	 * @param DataSet $set
+	 * @return void
+	 */
+	public function fixDataSet($set){
+		$aliases = $set->getAliases();
+
+		foreach($aliases as $key=> $alias){
+			$columnData = $set->getColumnData($key);
+			$this->addColumnData($alias,$columnData);
+		}
+	}
+	/**
 	 * Returning a column data set
 	 *
-	 * @param string $columnName
+	 * @param string|int $columnName
 	 * @return Cell[]
 	 */
 	public function getColumnData($columnName){
-		$index = array_search($columnName,$this->aliases);
+		$index = is_string($columnName)?$this->searchAlias($columnName):$columnName;
 
 		if($index<0)
 			// <ABE18> \\
@@ -141,6 +154,19 @@ class DataSet extends KeepAB{
 	 * @param Cell[] $data
 	 */
 	public function addColumnData($name,$data){
+		$exists = false;
+		try{
+			$this->searchAlias($name);
+
+			$exists = true;
+		} catch(\Exception $e){
+			$exists= false;
+		}
+		
+		if($exists)
+			// <ABE30> \\
+			throw new ABException("Column already in field list",30);
+
 		if(!empty($this->getCount())&&count($data)!=$this->getCount())
 			// <ABE23> \\
 			throw new ABException("Row count is not matching for new data set.",23);
@@ -188,5 +214,90 @@ class DataSet extends KeepAB{
 		}
 
 		return $fetched;
+	}
+	/**
+	 * Returning the cell by row index and cell name or index
+	 *
+	 * @param int|string $aliasOrIndex
+	 * @param int $rowIndex
+	 * @return Cell
+	 */
+	public function getCell($aliasOrIndex,$rowIndex){
+		$row = $this->getByIndex($rowIndex);
+
+		if(is_numeric($aliasOrIndex))
+			$index = $aliasOrIndex;
+		else
+			$index = $this->searchAlias($aliasOrIndex);
+
+		return $row->getCell($index);
+	}
+	/**
+	 * Searching for a alias and return the index of alias
+	 * 
+	 * @param string $alias
+	 * @return int
+	 */
+	public function searchAlias($string){
+
+		$matchedAmb =[];
+
+		foreach($this->aliases as $key=> $alias){
+			$explodedAlias = explode(".", $alias);
+			$explodedString = explode(".",$string);
+
+			if(count($explodedString)==2){
+				if($alias==$string)
+					return $key;
+			} else {
+				if(count($explodedAlias)==2){
+					if($explodedAlias[1]==$string)
+						$matchedAmb[] = $key;
+				} else {
+					if($alias==$string)
+						return $key;
+				}
+			}
+
+			if(count($matchedAmb)>1)
+				// <ABE29> \\
+				throw new Column("Column '$string' is ambigous. ",29);
+
+		}
+
+		if(count($matchedAmb)==1){
+			return $matchedAmb[0];
+		}
+
+		// <ABE31> \\
+		throw new ABException("Unknown column '$string' in field list.",31);
+	}
+	/**
+	 * Setting the rows
+	 *
+	 * @param Row[] $rows
+	 * @return void
+	 */
+	public function __setRows($rows){
+		$this->rows = $rows;
+	}
+	/**
+	 * Deep cloning a dataset
+	 * 
+	 * @return DataSet
+	 */
+	public function cloneMe(){
+		$rows = $this->rows;
+
+		$clonedRows = [];
+
+		foreach($rows as $row){
+			$clonedRows[] = clone($row);
+		}
+
+		$clonedMe = clone($this);
+		$clonedMe->__setRows($clonedRows);
+
+		return $clonedMe;
 	}
 }

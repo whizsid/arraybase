@@ -39,4 +39,19 @@ class Row extends KeepDataSet {
     public function getCell($index){
         return $this->cells[$index];
 	}
+	/**
+	 * Creating a new row and fill it by cells with null values
+	 *
+	 * @param int $length
+	 * @return Row
+	 */
+	public static function newNullRow($length){
+		$row = new Row();
+
+		for ($i=0; $i < $length; $i++) { 
+			$row->newCell(null);
+		}
+
+		return $row;
+	}
 }

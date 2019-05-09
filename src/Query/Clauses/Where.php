@@ -3,8 +3,10 @@ namespace WhizSid\ArrayBase\Query\Clauses;
 
 use WhizSid\ArrayBase\KeepQuery;
 use WhizSid\ArrayBase\Query\Objects\Comparison;
+use WhizSid\ArrayBase\AB\Traits\KeepDataSet;
 
 class Where extends KeepQuery {
+	use KeepDataSet;
     /**
      * Comparisons in the given order
      *
@@ -24,7 +26,14 @@ class Where extends KeepQuery {
     {
         $this->addComparison($leftSide,$operator,$rightSide);
     }
-
+	/**
+	 * Adding a comparison to where clause
+	 *
+	 * @param mixed $leftSide
+	 * @param mixed $operator
+	 * @param mixed $rightSide
+	 * @return void
+	 */
     protected function addComparison($leftSide,$operator,$rightSide=null){
         $comparison = new Comparison($leftSide,$operator,$rightSide);
         $this->comparisons[] = $comparison;
@@ -58,14 +67,15 @@ class Where extends KeepQuery {
     /**
      * Executing the where clause and returning the value
      * 
+	 * @param int $rowIndex
      * @return bool
      */
-    public function execute(){
+    public function execute($rowIndex){
 
         $value = TRUE;
 
         foreach ($this->comparisons as $key => $comparison) {
-            $currentStatus = $comparison->execute();
+            $currentStatus = $comparison->setDataSet($this->dataSet)->execute($rowIndex);
 
             if($key!=0){
                 $value = $currentStatus;

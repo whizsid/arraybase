@@ -8,9 +8,11 @@ use WhizSid\ArrayBase\Query\Traits\Joinable;
 use WhizSid\ArrayBase\Query\Traits\Whereable;
 use WhizSid\ArrayBase\Query\Traits\Limitable;
 use WhizSid\ArrayBase\Query\Traits\Orderable;
+use WhizSid\ArrayBase\Query\Interfaces\QueryType;
+use WhizSid\ArrayBase\AB\Traits\KeepDataSet;
 
-class Select extends KeepQuery {
-    use Joinable,Whereable,Limitable,Orderable;
+class Select extends KeepQuery implements QueryType{
+	use Joinable,Whereable,Limitable,Orderable,KeepDataSet;
     /**
      * Table tha in from clause
      *
@@ -59,5 +61,9 @@ class Select extends KeepQuery {
      */
     public function getColumns(){
         return $this->columns;
-    }
+	}
+	
+	public function execute(){
+		
+	}
 }

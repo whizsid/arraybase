@@ -50,5 +50,21 @@ class Join extends KeepQuery{
         $on = new On($leftSide,$operator,$rightSide);
         $on->setQuery($this->query)->setAB($this->ab);
         return $on;
-    }
+	}
+	/**
+	 * Returning the joined table
+	 * 
+	 * @return Table
+	 */
+	public function getTable(){
+		return $this->table;
+	}
+	/**
+	 * Returning the on clause
+	 *
+	 * @return On
+	 */
+	public function getOnCluase(){
+		return $this->on;
+	}
 }

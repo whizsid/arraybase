@@ -6,8 +6,30 @@ use WhizSid\ArrayBase\AB\DataSet;
 use WhizSid\ArrayBase\AB\Table;
 use WhizSid\ArrayBase\AB\Table\Column;
 use WhizSid\ArrayBase\AB;
+use PHPUnit\Framework\MockObject\BadMethodCallException;
 
+/**
+ * Helper class to array base functions
+ *
+ * @method static boolean isTable(mixed $table)
+ * @method static boolean isColumn(mixed $column)
+ * @method static boolean isBindedColumn(mixed $bindedColumn)
+ * @method static boolean isDataSet(mixed $dataSet)
+ * @method static boolean isCell(mixed $cell)
+ */
 class Helper {
+	/**
+	 * Types and relative class names for validation process
+	 *
+	 * @var string[]
+	 */
+	protected static $types = [
+		'table'=>'WhizSid\ArrayBase\AB\Table',
+		'column'=>'WhizSid\ArrayBase\AB\Table\Column',
+		'bindedcolumn'=>'WhizSid\ArrayBase\Query\Objects\ColumnWithIndex',
+		'dataset'=>'WhizSid\ArrayBase\AB\DataSet',
+		'cell'=>'WhizSid\ArrayBase\AB\DataSet\Row\Cell',
+	];
 	/**
 	 * Parsing data array to dataset
 	 *
@@ -97,4 +119,19 @@ class Helper {
 
 		$table->insertDataSet($dataSet);
 	}
+	/**
+	 * Checking the given value is in the correct type
+	 */
+	 public function __callStatic($name, $arguments)
+	 {
+		 if(strtolower(substr($name,0,2))=='is'&&count($arguments)==1){
+			if(isset(self::$types[strtolower(substr($name,2))]))
+				return self::$types[strtolower(substr($name,2))]==get_class($arguments[0]);
+			else
+				// <ABE28> \\
+				throw new ABException("Invalid type supplied. Can not find the type $name.",28);
+		 }
+		 else
+		 	throw new BadMethodCallException("Invalid function called.");
+	 }
 }
