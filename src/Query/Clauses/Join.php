@@ -13,7 +13,7 @@ class Join extends KeepQuery{
 
     protected $table;
 
-    protected $availableModes = ["inner","left","right","left outer","outer"];
+    protected $availableModes = ["inner","left","right","outer"];
 
     protected $defaultMode = "inner";
     
@@ -25,7 +25,7 @@ class Join extends KeepQuery{
             // <ABE15> \\
             throw new ABException("Invalid join method supplied. Available join methods are ".implode(",",$this->availableModes));
 
-        $this->mode = $mode;
+        $this->mode = array_search($mode,$this->availableModes)+1;
     }
     /**
      * Setting an table to join
@@ -66,5 +66,13 @@ class Join extends KeepQuery{
 	 */
 	public function getOnCluase(){
 		return $this->on;
+	}
+	/**
+	 * Returning the join mode
+	 * 
+	 * @return int one of AB_JOIN_INNER | AB_JOIN_LEFT | AB_JOIN_RIGHT | AB_JOIN_OUTER
+	 */
+	public function getMode(){
+		return $this->mode;
 	}
 }

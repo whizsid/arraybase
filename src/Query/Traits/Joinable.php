@@ -95,6 +95,7 @@ trait Joinable {
 		/** @var Join $join */ 
 		foreach ($this->joins as $join) {
 			$table = $join->getTable();
+		
 
 			/** @var DataSet $joiningDataSet */
 			$joiningDataSet = $this->__globalizeDataSet($table->getName(),$table->__getDataSet());
@@ -102,24 +103,26 @@ trait Joinable {
 			$mainDataSetCount = $mainDataSet->getCount();
 			$joiningDataSetCount = $joiningDataSet->getCount();
 
-			$matchedIndexes = [];
-
 			for ($i=0; $i < $mainDataSetCount; $i++) { 
+				$mainRow = $mainDataSet->getByIndex($i);
+
 				for ($j=0; $j < $joiningDataSetCount; $j++) { 
 					
-					$mainRow = $mainDataSet->getByIndex($i);
-					$joinRow = $joiningDataSet->getByIndex($j);
+					$joiningRow = $joiningDataSet->getByIndex($j);
 
-					$tmpDataSet = $this->makeNewSetByDualRows($mainRow,$joinRow);
+					$tmpDataSet = $this->makeNewSetByDualRows($mainRow,$joiningRow);
 
 					$on = $join->getOnCluase();
 
 					$matched = $on->setDataSet($tmpDataSet)->execute(0);
 
-					if($matched)
-						$matchedIndexes[] = [$i,$j];
+					if($matched){
+
+					}
 				}
+
 			}
+
 			
 		}
 	}

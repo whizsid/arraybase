@@ -1,4 +1,7 @@
 # PHP Array Base
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
+
 A fully featured SQL like engine for php arrays. You can do join,group,order, get sum and many more sql functions to PHP arrays with AB.
 
 ## Basic
