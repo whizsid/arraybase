@@ -193,7 +193,7 @@ class DataSet extends KeepAB{
 	 * @param mixed $defaultValue
 	 * @return void
 	 */
-	public function newColumn($name,$defaultValue){
+	public function newColumn($name,$defaultValue=null){
 		$this->aliases[]=$name;
 
 		foreach ($this->rows as $row) {

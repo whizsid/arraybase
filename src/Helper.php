@@ -16,6 +16,7 @@ use PHPUnit\Framework\MockObject\BadMethodCallException;
  * @method static boolean isBindedColumn(mixed $bindedColumn)
  * @method static boolean isDataSet(mixed $dataSet)
  * @method static boolean isCell(mixed $cell)
+ * @method static boolean isQuery(mixed $query)
  */
 class Helper {
 	/**
@@ -29,6 +30,7 @@ class Helper {
 		'bindedcolumn'=>'WhizSid\ArrayBase\Query\Objects\ColumnWithIndex',
 		'dataset'=>'WhizSid\ArrayBase\AB\DataSet',
 		'cell'=>'WhizSid\ArrayBase\AB\DataSet\Row\Cell',
+		'query'=>'WhizSid\ArrayBase\Query'
 	];
 	/**
 	 * Parsing data array to dataset

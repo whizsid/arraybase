@@ -16,7 +16,7 @@ class Row extends KeepDataSet {
      * Setting a cell by column name
      *
      * @param mixed $value
-     * @return void
+     * @return Cell
      */
     public function newCell($value){
 		$cell = new Cell();
@@ -29,6 +29,8 @@ class Row extends KeepDataSet {
 		$cell->setIndex($index);
 
 		$this->cells[] = $cell;
+
+		return $cell;
     }
     /**
      * Returning a cell by column name
@@ -45,12 +47,14 @@ class Row extends KeepDataSet {
 	 * @param int $length
 	 * @return Row
 	 */
-	public static function newNullRow($length){
+	public function newNullRow($length){
 		$row = new Row();
 
 		for ($i=0; $i < $length; $i++) { 
 			$row->newCell(null);
 		}
+
+		$row->setDataSet($this->dataSet);
 
 		return $row;
 	}

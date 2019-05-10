@@ -5,7 +5,9 @@ use WhizSid\ArrayBase\Query\Clauses\Join;
 use WhizSid\ArrayBase\AB\Table;
 use WhizSid\ArrayBase\AB\DataSet;
 use WhizSid\ArrayBase\AB\DataSet\Row;
-
+/**
+ * @property DataSet $dataset
+ */
 trait Joinable {
 	/**
 	 * Column Aliases with table alias
@@ -91,39 +93,75 @@ trait Joinable {
 	public function executeJoin($mainTable){
 		/** @var DataSet $mainDataSet */
 		$mainDataSet = $this->__globalizeDataSet($mainTable->getName(),$mainTable->__getDataSet());
+		$this->dataset = $mainDataSet;
 
 		/** @var Join $join */ 
 		foreach ($this->joins as $join) {
 			$table = $join->getTable();
-		
+
+			$mode = $join->getMode();
 
 			/** @var DataSet $joiningDataSet */
 			$joiningDataSet = $this->__globalizeDataSet($table->getName(),$table->__getDataSet());
 
-			$mainDataSetCount = $mainDataSet->getCount();
-			$joiningDataSetCount = $joiningDataSet->getCount();
+			if($mode==AB_JOIN_RIGHT){
+				$rightDataSet = $this->dataset;
+				$leftDataSet = $joiningDataSet;
+			} else {
+				$rightDataSet = $joiningDataSet;
+				$leftDataSet = $this->dataset;
+			}
 
-			for ($i=0; $i < $mainDataSetCount; $i++) { 
-				$mainRow = $mainDataSet->getByIndex($i);
+			$joinedSet = new DataSet();
 
-				for ($j=0; $j < $joiningDataSetCount; $j++) { 
+			$leftAliases = $leftDataSet->getAliases();
+			$rightAliases = $rightAliases();
+
+			foreach($leftAliases as $leftAliase){
+				$joinedSet->newColumn($leftAliase);
+			}
+
+			foreach($rightAliases as $rightAliase){
+				$joinedSet->newColumn($rightAliase);
+			}
+
+			$leftDataSetCount = $leftDataSet->getCount();
+			$rightDataSetCount = $rightDataSet->getCount();
+
+
+			for ($i=0; $i < $leftDataSetCount; $i++) { 
+				$leftRow = $leftDataSet->getByIndex($i);
+
+				$foundOneRight = false;
+				for ($j=0; $j < $rightDataSetCount; $j++) { 
 					
-					$joiningRow = $joiningDataSet->getByIndex($j);
+					if(!($foundOneRight&&($mode==AB_JOIN_LEFT||$mode==AB_JOIN_RIGHT))){
 
-					$tmpDataSet = $this->makeNewSetByDualRows($mainRow,$joiningRow);
+						$rightRow = $rightDataSet->getByIndex($j);
 
-					$on = $join->getOnCluase();
+						$tmpDataSet = $this->makeNewSetByDualRows($leftRow,$rightRow);
 
-					$matched = $on->setDataSet($tmpDataSet)->execute(0);
+						$on = $join->getOnCluase();
 
-					if($matched){
+						$matched = $on->setDataSet($tmpDataSet)->execute(0);
 
+						if($matched){
+							$foundOneRight = true;
+
+							$newSet = $this->makeNewSetByDualRows($leftRow,$rightRow);
+							$joinedSet->mergeDataSet($newSet);
+
+						} else if($mode!=AB_JOIN_INNER){
+							$newSet = $this->makeNewSetByDualRows($leftRow,$rightRow->newNullRow(count($rightAliases)));
+							$joinedSet->mergeDataSet($newSet);
+						}
 					}
+
 				}
 
 			}
 
-			
+			$this->dataset = $joinedSet;
 		}
 	}
 }

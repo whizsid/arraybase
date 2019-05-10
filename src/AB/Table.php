@@ -42,7 +42,6 @@ class Table extends KeepAB{
 		$this->name = $name;
 		$this->dataSet = new DataSet();
 		$this->dataSet->setAB($this->ab);
-		$this->dataSet->setName($this->name);
     }
     /**
      * Create a column to table
