@@ -2,6 +2,8 @@
 
 namespace WhizSid\ArrayBase;
 
+use WhizSid\ArrayBase\AB\Table;
+
 class AB {
     /**
      * Created Tables

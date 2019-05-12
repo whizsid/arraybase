@@ -16,6 +16,12 @@ class DataSet extends KeepAB{
      */
 	protected $rows = [];
 	/**
+	 * Data set globalized or not
+	 *
+	 * @var boolean
+	 */
+	protected $globalized= false;
+	/**
 	 * Aliases for data column
 	 *
 	 * @var string[]
@@ -310,5 +316,24 @@ class DataSet extends KeepAB{
 		$clonedMe->__setRows($clonedRows);
 
 		return $clonedMe;
+	}
+	/**
+	 * Globalizing the data set by prepending a name to all aliases
+	 * 
+	 * @param string $name
+	 * @return boolean
+	 */
+	public function globalizeMe($name){
+
+		if($this->globalized)
+			return false;
+
+		$dataSetAliases = $this->getAliases();
+
+		foreach($dataSetAliases as $dataSetAliase){
+			$this->renameAlias($dataSetAliase,$name.'.'.$dataSetAliase);
+		}
+
+		return true;
 	}
 }

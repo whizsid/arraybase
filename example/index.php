@@ -55,17 +55,18 @@ $ab->createTable('tbl_another',[
 	[
 		'c_id'=>1,
 		'ant_id'=>4
-	]
+	],
+	['c_id'=>1,
+	'ant_id'=>10]
 ]);
-
-$columns = $ab->getTable('tbl_facility')->getColumns();
 
 $selectQuery = $ab->query()->select($ab->tbl_customer);
 
 $selectQuery->join('inner',$ab->tbl_facility)->on($ab->tbl_customer->c_id,'=',$ab->tbl_facility->c_id);
 $selectQuery->join('inner',$ab->tbl_another)->on($ab->tbl_customer->c_id,'=',$ab->tbl_another->c_id);
-$dataSet = $selectQuery->execute();
+$selectQuery->orderBy($ab->tbl_facility->fac_code,'asc')->orderBy($ab->tbl_another->ant_id,'asc');
+$result = $selectQuery->execute()->fetchAssoc();
 
-var_dump($dataSet->fetchAssoc());
+var_dump($result);
 die;
 

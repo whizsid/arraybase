@@ -55,11 +55,7 @@ trait Joinable {
 	 */
 	protected function __globalizeDataSet($tableName,$dataSetOrg){
 		$dataSet = $dataSetOrg->cloneMe();
-		$dataSetAliases = $dataSet->getAliases();
-
-		foreach($dataSetAliases as $dataSetAliase){
-			$dataSet->renameAlias($dataSetAliase,$tableName.'.'.$dataSetAliase);
-		}
+		$dataSet->globalizeMe($tableName);
 
 		return $dataSet;
 	}
@@ -90,14 +86,10 @@ trait Joinable {
 	/**
 	 * Executing the join clause in the query
 	 * 
-	 * @param Table $mainTable
 	 * @return DataSet
 	 */
-	public function executeJoin($mainTable){
-		/** @var DataSet $mainDataSet */
-		$mainDataSet = $this->__globalizeDataSet($mainTable->getName(),$mainTable->__getDataSet());
-		$this->dataSet = $mainDataSet;
-
+	public function executeJoin(){
+		
 		/** @var Join $join */ 
 		foreach ($this->joins as $join) {
 			$table = $join->getTable();
@@ -160,6 +152,7 @@ trait Joinable {
 							$newSet = $this->makeNewSetByDualRows($leftRow,$rightRow->newNullRow(count($rightAliases)));
 
 							$joinedSet->mergeDataSet($newSet);
+
 
 							if($mode==AB_JOIN_OUTER){
 								$newSet = $this->makeNewSetByDualRows($leftRow->newNullRow(count($leftAliases)),$rightRow);

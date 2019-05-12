@@ -64,7 +64,16 @@ class Select extends KeepQuery implements QueryType{
 	}
 	
 	public function execute(){
-		$this->executeJoin($this->from);
+		/** @var DataSet $mainDataSet */
+		$orgMainDataSet = $this->from->__getDataSet();
+
+		$mainDataSet = $orgMainDataSet->cloneMe();
+		$mainDataSet->globalizeMe($this->from->getName());
+
+		$this->dataSet = $mainDataSet;
+
+		$this->executeJoin();
+		$this->executeOrder();
 		
 		return $this->dataSet;
 	}
