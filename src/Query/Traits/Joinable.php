@@ -6,7 +6,7 @@ use WhizSid\ArrayBase\AB\Table;
 use WhizSid\ArrayBase\AB\DataSet;
 use WhizSid\ArrayBase\AB\DataSet\Row;
 /**
- * @property DataSet $dataset
+ * @property DataSet $dataSet
  */
 trait Joinable {
 	/**
@@ -40,7 +40,9 @@ trait Joinable {
 
         $join->setAB($this->ab)->setQuery($this->query);
 
-        $join->setTable($tbl);
+		$join->setTable($tbl);
+		
+		$this->joins[] = $join;
 
         return $join;
 	}
@@ -79,7 +81,8 @@ trait Joinable {
 		}
 
 		foreach ($secondAliases as $key => $alias) {
-			$tmpDataSet->addColumnData($alias,[$secondRow->getCell($key)]);
+			if(!in_array($alias,$fristAliases))
+				$tmpDataSet->addColumnData($alias,[$secondRow->getCell($key)]);
 		}
 
 		return $tmpDataSet;
@@ -93,7 +96,7 @@ trait Joinable {
 	public function executeJoin($mainTable){
 		/** @var DataSet $mainDataSet */
 		$mainDataSet = $this->__globalizeDataSet($mainTable->getName(),$mainTable->__getDataSet());
-		$this->dataset = $mainDataSet;
+		$this->dataSet = $mainDataSet;
 
 		/** @var Join $join */ 
 		foreach ($this->joins as $join) {
@@ -105,29 +108,29 @@ trait Joinable {
 			$joiningDataSet = $this->__globalizeDataSet($table->getName(),$table->__getDataSet());
 
 			if($mode==AB_JOIN_RIGHT){
-				$rightDataSet = $this->dataset;
+				$rightDataSet = $this->dataSet;
 				$leftDataSet = $joiningDataSet;
 			} else {
 				$rightDataSet = $joiningDataSet;
-				$leftDataSet = $this->dataset;
+				$leftDataSet = $this->dataSet;
 			}
 
 			$joinedSet = new DataSet();
 
 			$leftAliases = $leftDataSet->getAliases();
-			$rightAliases = $rightAliases();
+			$rightAliases = $rightDataSet->getAliases();
 
 			foreach($leftAliases as $leftAliase){
 				$joinedSet->newColumn($leftAliase);
 			}
 
 			foreach($rightAliases as $rightAliase){
-				$joinedSet->newColumn($rightAliase);
+				if(!in_array($rightAliase,$leftAliases))
+					$joinedSet->newColumn($rightAliase);
 			}
 
 			$leftDataSetCount = $leftDataSet->getCount();
 			$rightDataSetCount = $rightDataSet->getCount();
-
 
 			for ($i=0; $i < $leftDataSetCount; $i++) { 
 				$leftRow = $leftDataSet->getByIndex($i);
@@ -135,7 +138,7 @@ trait Joinable {
 				$foundOneRight = false;
 				for ($j=0; $j < $rightDataSetCount; $j++) { 
 					
-					if(!($foundOneRight&&($mode==AB_JOIN_LEFT||$mode==AB_JOIN_RIGHT))){
+					if(!($foundOneRight&&$mode!=AB_JOIN_INNER)){
 
 						$rightRow = $rightDataSet->getByIndex($j);
 
@@ -144,16 +147,26 @@ trait Joinable {
 						$on = $join->getOnCluase();
 
 						$matched = $on->setDataSet($tmpDataSet)->execute(0);
-
+						
 						if($matched){
-							$foundOneRight = true;
-
+							if($mode!=AB_JOIN_OUTER)
+								$foundOneRight = true;
+							
 							$newSet = $this->makeNewSetByDualRows($leftRow,$rightRow);
+
 							$joinedSet->mergeDataSet($newSet);
 
-						} else if($mode!=AB_JOIN_INNER){
+						} else if($mode!=AB_JOIN_INNER&&$j==$rightDataSetCount-1&&$i==$leftDataSetCount-1){
 							$newSet = $this->makeNewSetByDualRows($leftRow,$rightRow->newNullRow(count($rightAliases)));
+
 							$joinedSet->mergeDataSet($newSet);
+
+							if($mode==AB_JOIN_OUTER){
+								$newSet = $this->makeNewSetByDualRows($leftRow->newNullRow(count($leftAliases)),$rightRow);
+
+								$joinedSet->mergeDataSet($newSet);
+							}
+
 						}
 					}
 
@@ -161,7 +174,7 @@ trait Joinable {
 
 			}
 
-			$this->dataset = $joinedSet;
+			$this->dataSet = $joinedSet;
 		}
 	}
 }

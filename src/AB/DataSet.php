@@ -242,13 +242,21 @@ class DataSet extends KeepAB{
 
 		$matchedAmb =[];
 
-		foreach($this->aliases as $key=> $alias){
+		$aliases = $this->aliases;
+
+		foreach($aliases as $key=> $alias){
 			$explodedAlias = explode(".", $alias);
 			$explodedString = explode(".",$string);
 
 			if(count($explodedString)==2){
-				if($alias==$string)
-					return $key;
+				if(count($explodedAlias)==2){
+					if ($alias==$string)
+						return $key;
+				}
+				else {
+					if($alias == $explodedString[1])
+						return $key;
+				}
 			} else {
 				if(count($explodedAlias)==2){
 					if($explodedAlias[1]==$string)
@@ -289,13 +297,16 @@ class DataSet extends KeepAB{
 	public function cloneMe(){
 		$rows = $this->rows;
 
+		$clonedMe = clone($this);
+
 		$clonedRows = [];
 
 		foreach($rows as $row){
-			$clonedRows[] = clone($row);
+			$clonedRow = clone($row);
+			$clonedRow->setDataSet($clonedMe);
+			$clonedRows[] = $clonedRow;
 		}
 
-		$clonedMe = clone($this);
 		$clonedMe->__setRows($clonedRows);
 
 		return $clonedMe;

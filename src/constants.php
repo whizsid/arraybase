@@ -1,6 +1,6 @@
 <?php
 
-define('AB_JOIN_INNER',1,true);
-define('AB_JOIN_LEFT',2,true);
-define('AB_JOIN_RIGHT',3,true);
-define('AB_JOIN_OUTER',4,true);
+define('AB_JOIN_INNER',1);
+define('AB_JOIN_LEFT',2);
+define('AB_JOIN_RIGHT',3);
+define('AB_JOIN_OUTER',4);

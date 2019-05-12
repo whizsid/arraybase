@@ -50,11 +50,11 @@ class Row extends KeepDataSet {
 	public function newNullRow($length){
 		$row = new Row();
 
+		$row->setDataSet($this->dataSet);
+
 		for ($i=0; $i < $length; $i++) { 
 			$row->newCell(null);
 		}
-
-		$row->setDataSet($this->dataSet);
 
 		return $row;
 	}

@@ -72,22 +72,23 @@ class Where extends KeepQuery {
      */
     public function execute($rowIndex){
 
-        $value = TRUE;
-
+		$value = TRUE;
+		
         foreach ($this->comparisons as $key => $comparison) {
-            $currentStatus = $comparison->setDataSet($this->dataSet)->execute($rowIndex);
-
-            if($key!=0){
+			$currentStatus = $comparison->setDataSet($this->dataSet)->execute($rowIndex);
+			
+			if($key==0){
                 $value = $currentStatus;
             } else {
-                $operator = $this->operators[$key-1];
-
+				$operator = $this->operators[$key-1];
+				
                 if($operator)
                     $value = $value||$currentStatus;
                 else 
-                    $value = $value&&$currentStatus;
-            }
-        }
+					$value = $value&&$currentStatus;
+			}
+			
+		}
 
         return $value;
     }

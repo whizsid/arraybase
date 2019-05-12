@@ -67,7 +67,9 @@ class Comparison{
 		if(Helper::isColumn($leftSide))
 			$leftSide = $this->getCellByColumnAndRow($leftSide,$key);
 
-        return $this->operator->compare($leftSide,$rightSide);
+		$compared = $this->operator->compare($leftSide,$rightSide);
+		
+        return $compared;
 	}
 	/**
 	 * Returning the cell from data set by column and row index

@@ -24,7 +24,7 @@ class Select extends KeepQuery implements QueryType{
      *
      * @var Column[]
      */
-    protected $columns;
+    protected $columns=[];
     /**
      * Setting a base table
      * 
@@ -64,6 +64,8 @@ class Select extends KeepQuery implements QueryType{
 	}
 	
 	public function execute(){
+		$this->executeJoin($this->from);
 		
+		return $this->dataSet;
 	}
 }

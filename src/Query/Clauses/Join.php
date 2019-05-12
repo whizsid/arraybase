@@ -48,7 +48,8 @@ class Join extends KeepQuery{
      */
     public function on($leftSide,$operator,$rightSide=null){
         $on = new On($leftSide,$operator,$rightSide);
-        $on->setQuery($this->query)->setAB($this->ab);
+		$on->setQuery($this->query)->setAB($this->ab);
+		$this->on = $on;
         return $on;
 	}
 	/**
