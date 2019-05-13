@@ -1,37 +1,43 @@
-## Welcome to GitHub Pages
+## Lets start cooking PHP arrays
 
-You can use the [editor on GitHub](https://github.com/whizsid/arraybase/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+You dont want to store your array data in a temporary table to use SQL functions and queries. SQL queries is now possible to use with php arrays. ArrayBase is written in pure PHP.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+### Example Table Creation
 
-### Markdown
+```
+use WhizSid\ArrayBase\AB;
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+$ab = new AB;
 
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+$ab->createTable('tbl_customer',[
+	[
+		'c_id'=>1,
+		'c_name'=>"Customer 1",
+		'c_address'=>'customer address 1'
+	],
+	[
+		'c_id'=>2,
+		'c_name'=>null,
+		"c_address"=>'customer address 2'
+	],
+	[
+		'c_id'=>10,
+		'c_name'=>"Customer 10",
+		"c_address"=>'customer address 10'
+	]
+]);
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+Not all. You can define auto increment fields, data types and you can use all mysql functions.
 
-### Jekyll Themes
+### You can use simple or more advanced queries
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/whizsid/arraybase/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+```
+$selectQuery = $ab->query()->select($ab->tbl_customer);
 
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+$selectQuery->join('inner',$ab->tbl_facility)->on($ab->tbl_customer->c_id,'=',$ab->tbl_facility->c_id);
+$selectQuery->join('inner',$ab->tbl_another)->on($ab->tbl_customer->c_id,'=',$ab->tbl_another->c_id);
+$selectQuery->orderBy($ab->tbl_facility->fac_code,'asc')->orderBy($ab->tbl_another->ant_id,'asc');
+$selectQuery->groupBy($ab->tbl_customer->c_id);
+$result = $selectQuery->execute()->fetchAssoc();
+```
