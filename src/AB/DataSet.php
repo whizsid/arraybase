@@ -298,7 +298,7 @@ class DataSet extends KeepAB{
 	/**
 	 * Deep cloning a dataset
 	 * 
-	 * @return DataSet
+	 * @return self
 	 */
 	public function cloneMe(){
 		$rows = $this->rows;

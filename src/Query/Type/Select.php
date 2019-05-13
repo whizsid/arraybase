@@ -8,11 +8,12 @@ use WhizSid\ArrayBase\Query\Traits\Joinable;
 use WhizSid\ArrayBase\Query\Traits\Whereable;
 use WhizSid\ArrayBase\Query\Traits\Limitable;
 use WhizSid\ArrayBase\Query\Traits\Orderable;
+use WhizSid\ArrayBase\Query\Traits\Groupable;
 use WhizSid\ArrayBase\Query\Interfaces\QueryType;
 use WhizSid\ArrayBase\AB\Traits\KeepDataSet;
 
 class Select extends KeepQuery implements QueryType{
-	use Joinable,Whereable,Limitable,Orderable,KeepDataSet;
+	use Joinable,Whereable,Limitable,Orderable,Groupable,KeepDataSet;
     /**
      * Table tha in from clause
      *
@@ -74,6 +75,7 @@ class Select extends KeepQuery implements QueryType{
 
 		$this->executeJoin();
 		$this->executeOrder();
+		$this->executeGroupBy();
 		
 		return $this->dataSet;
 	}

@@ -60,5 +60,14 @@ class Parser {
 		else 
 			// <<ABE27> \\
 			throw new ABException("Invalid variable given for parser.",27);
-    }
+	}
+	/**
+	 * Hashing an array to integer type
+	 * 
+	 * @param mixed $val
+	 * @return string
+	 */
+	public static function parseHashInt($val){
+		return md5(json_encode($val));
+	}
 }

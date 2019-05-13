@@ -54,10 +54,10 @@ $ab->createTable('tbl_facility',[
 $ab->createTable('tbl_another',[
 	[
 		'c_id'=>1,
-		'ant_id'=>4
+		'ant_id'=>"A"
 	],
-	['c_id'=>1,
-	'ant_id'=>10]
+	['c_id'=>2,
+	'ant_id'=>"B"]
 ]);
 
 $selectQuery = $ab->query()->select($ab->tbl_customer);
@@ -65,6 +65,7 @@ $selectQuery = $ab->query()->select($ab->tbl_customer);
 $selectQuery->join('inner',$ab->tbl_facility)->on($ab->tbl_customer->c_id,'=',$ab->tbl_facility->c_id);
 $selectQuery->join('inner',$ab->tbl_another)->on($ab->tbl_customer->c_id,'=',$ab->tbl_another->c_id);
 $selectQuery->orderBy($ab->tbl_facility->fac_code,'asc')->orderBy($ab->tbl_another->ant_id,'asc');
+$selectQuery->groupBy($ab->tbl_customer->c_id);
 $result = $selectQuery->execute()->fetchAssoc();
 
 var_dump($result);

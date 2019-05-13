@@ -4,7 +4,6 @@ namespace WhizSid\ArrayBase\Query\Traits;
 use WhizSid\ArrayBase\Query\Clauses\Order;
 use WhizSid\ArrayBase\ABException;
 use WhizSid\ArrayBase\AB\DataSet;
-use WhizSid\ArrayBase\AB\DataSet\Row\Cell;
 use WhizSid\ArrayBase\Helper;
 use WhizSid\ArrayBase\AB\DataSet\Row;
 use WhizSid\ArrayBase\Query\Objects\Parser;
@@ -40,7 +39,7 @@ trait Orderable {
 	 */
 	public function executeOrder(){
 		/** @var DataSet $orgDataSet */
-		$dataSet = $this->dataSet->cloneMe();
+		$dataSet = $this->dataSet;
 
 		$rows = $dataSet->__getRows();
 
@@ -49,7 +48,7 @@ trait Orderable {
 		usort($rows,function(Row $row1, Row $row2) use($dataSet,$reversed){
 			
 			/** @var Order $ordered */
-			foreach ( $reversed as $key => $ordered) {
+			foreach ( $reversed as $ordered) {
 
 				$object = $ordered->getObject();
 				$mode = $ordered->getMode();
@@ -76,6 +75,11 @@ trait Orderable {
 
 			return 1;
 		});
+
+		/** @var Row $row */
+		foreach ($rows as $key => $row) {
+			$row->setIndex($key);
+		}
 
 		$dataSet->__setRows($rows);
 

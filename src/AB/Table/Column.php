@@ -266,5 +266,13 @@ class Column extends KeepTable {
         $this->validate();
 
         return $this->comment;
-    }
+	}
+	/**
+	 * Reterning the full name with table name
+	 * 
+	 * @return string
+	 */
+	public function getFullName(){
+		return $this->getTable()->getName().'.'.$this->getName();
+	}
 }
