@@ -124,16 +124,16 @@ class Helper {
 	/**
 	 * Checking the given value is in the correct type
 	 */
-	 public function __callStatic($name, $arguments)
-	 {
-		 if(strtolower(substr($name,0,2))=='is'&&count($arguments)==1){
-			if(isset(self::$types[strtolower(substr($name,2))]))
-				return self::$types[strtolower(substr($name,2))]==get_class($arguments[0]);
-			else
-				// <ABE28> \\
-				throw new ABException("Invalid type supplied. Can not find the type $name.",28);
-		 }
-		 else
-		 	throw new BadMethodCallException("Invalid function called.");
-	 }
+	public function __callStatic($name, $arguments)
+	{
+		if(strtolower(substr($name,0,2))=='is'&&count($arguments)==1){
+		if(isset(self::$types[strtolower(substr($name,2))]))
+			return self::$types[strtolower(substr($name,2))]==get_class($arguments[0]);
+		else
+			// <ABE28> \\
+			throw new ABException("Invalid type supplied. Can not find the type $name.",28);
+		}
+		else
+		throw new BadMethodCallException("Invalid function called.");
+	}
 }

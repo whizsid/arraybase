@@ -1,12 +1,12 @@
 <?php
 namespace WhizSid\ArrayBase\AB;
 
-use WhizSid\ArrayBase\AB\Traits\Aliasable;
 use WhizSid\ArrayBase\AB\DataSet\Row;
 use WhizSid\ArrayBase\KeepAB;
 use WhizSid\ArrayBase\ABException;
 use WhizSid\ArrayBase\AB\DataSet\Row\Cell;
 use WhizSid\ArrayBase\AB\Table\Column;
+use WhizSid\ArrayBase\Helper;
 
 class DataSet extends KeepAB{
     /**
@@ -224,17 +224,21 @@ class DataSet extends KeepAB{
 	/**
 	 * Returning the cell by row index and cell name or index
 	 *
-	 * @param int|string $aliasOrIndex
+	 * @param int|string|Column $column
 	 * @param int $rowIndex
 	 * @return Cell
 	 */
-	public function getCell($aliasOrIndex,$rowIndex){
+	public function getCell($column,$rowIndex){
 		$row = $this->getByIndex($rowIndex);
 
-		if(is_numeric($aliasOrIndex))
-			$index = $aliasOrIndex;
+		if(Helper::isColumn($column)){
+			$column = $column->getTable()->getName().'.'.$column->getName();
+		}
+
+		if(is_numeric($column))
+			$index = $column;
 		else
-			$index = $this->searchAlias($aliasOrIndex);
+			$index = $this->searchAlias($column);
 
 		return $row->getCell($index);
 	}
