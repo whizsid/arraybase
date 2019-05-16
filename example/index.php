@@ -60,7 +60,7 @@ $ab->createTable('tbl_another',[
 	'ant_id'=>"B"]
 ]);
 
-$selectQuery = $ab->query()->select($ab->tbl_customer);
+$selectQuery = $ab->query()->select($ab->tbl_customer,$ab::concat(AB_DISTINCT,$ab->tbl_customer->c_id));
 
 $selectQuery->join('inner',$ab->tbl_facility)->on($ab->tbl_customer->c_id,'=',$ab->tbl_facility->c_id);
 $selectQuery->join('inner',$ab->tbl_another)->on($ab->tbl_customer->c_id,'=',$ab->tbl_another->c_id);

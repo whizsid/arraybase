@@ -16,10 +16,10 @@ use WhizSid\ArrayBase\Functions\Agregate\Sum;
  * Main class of array base. Every instance is born here
  * 
  * @method static Concat concat(mixed ...$values)
- * @method static IfElse if_else(mixed $leftSide, mixed $operator, mixed $rightSide = null, mixed $func = null)
- * @method static IfNull if_null(mixed $column)
+ * @method static IfElse ifElse(mixed $leftSide, mixed $operator, mixed $rightSide = null, mixed $func = null)
+ * @method static IfNull ifNull(mixed $column)
  * @method static Count count(mixed $distinct,mixed $column=null)
- * @method static GroupConcat group_concat(mixed $distinct,mixed $column=null)
+ * @method static GroupConcat groupConcat(mixed $distinct,mixed $column=null)
  * @method static Sum sum(mixed $distinct,mixed $column=null)
  */
 class AB {
@@ -93,7 +93,7 @@ class AB {
         return $query;
 	}
 	/**
-	 * Calling for arraybase functions
+	 * Calling to arraybase functions
 	 *
 	 * @param string $name
 	 * @param array $arguments
@@ -105,17 +105,30 @@ class AB {
 		$normalFunction = "\WhizSid\ArrayBase\Functions\\".$pascalCased;
 		$agrFunction = "\WhizSid\ArrayBase\Functions\Agregate\\".$pascalCased;
 
-		if(class_exists($normalFunction)||class_exists($agrFunction)){
+		if(class_exists($normalFunction)){
 			$function = new $normalFunction(...$arguments);
 
-			if(class_exists($agrFunction)){
-				/** @var Agregate $function */
+			return $function;
+		} else if(class_exists($agrFunction)){
 
-				if(count($arguments)>1)
-					$function->distinct(true);
+			if(count($arguments)>1){
+				if($arguments[0]!=AB_DISTINCT)
+					// <ABE35> \\
+					throw new ABException("Invalid value passed as argument distinct to $name function",35);
+
+				unset($arguments[0]);
+				/** @var Agregate $function */
+				$function = new $agrFunction(...$arguments);
+
+				$function->distinct(true);
+			} else {
+				$function = new $agrFunction(...$arguments);
 			}
 
 			return $function;
-		}
+
+		} else 
+			// <ABE34> \\
+			throw new ABException("Function $name is not implemented yet.",34);
 	}
 }

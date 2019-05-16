@@ -4,6 +4,7 @@ namespace WhizSid\ArrayBase\Functions;
 use WhizSid\ArrayBase\ABException;
 use WhizSid\ArrayBase\Query\Objects\Parser;
 use WhizSid\ArrayBase\AB\Traits\KeepDataSet;
+use WhizSid\ArrayBase\Helper;
 
 class ABFunction {
 	use KeepDataSet;
