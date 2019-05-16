@@ -1,7 +1,7 @@
 <?php
-namespace WhizSid\ArrayBase\Query\Objects;
+namespace WhizSid\ArrayBase\Functions;
 
-use WhizSid\ArrayBase\Query\Objects\Functions\ABFunction;
+use WhizSid\ArrayBase\Functions\ABFunction;
 
 class Concat extends ABFunction {
 	/**
@@ -24,6 +24,8 @@ class Concat extends ABFunction {
 	public function __construct(...$args)
 	{
 		$this->concats = $args;
+
+		$this->validate();
 	}
 	/**
 	 * Validating arguments

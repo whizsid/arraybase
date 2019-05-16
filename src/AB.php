@@ -2,8 +2,26 @@
 
 namespace WhizSid\ArrayBase;
 
-use WhizSid\ArrayBase\AB\Table;
+use WhizSid\ArrayBase\Functions\ABFunction;
+use WhizSid\ArrayBase\Functions\Concat;
+use WhizSid\ArrayBase\Query\Objects\IfElse;
+use WhizSid\ArrayBase\Query\Objects\IfNull;
 
+use WhizSid\ArrayBase\Functions\Agregate;
+use WhizSid\ArrayBase\Functions\Agregate\Count;
+use WhizSid\ArrayBase\Functions\Agregate\GroupConcat;
+use WhizSid\ArrayBase\Functions\Agregate\Sum;
+
+/**
+ * Main class of array base. Every instance is born here
+ * 
+ * @method static Concat concat(mixed ...$values)
+ * @method static IfElse if_else(mixed $leftSide, mixed $operator, mixed $rightSide = null, mixed $func = null)
+ * @method static IfNull if_null(mixed $column)
+ * @method static Count count(mixed $distinct,mixed $column=null)
+ * @method static GroupConcat group_concat(mixed $distinct,mixed $column=null)
+ * @method static Sum sum(mixed $distinct,mixed $column=null)
+ */
 class AB {
     /**
      * Created Tables
@@ -73,5 +91,31 @@ class AB {
         $this->lastQuery = $query;
 
         return $query;
-    }
+	}
+	/**
+	 * Calling for arraybase functions
+	 *
+	 * @param string $name
+	 * @param array $arguments
+	 * @return ABFunction|Agregate
+	 */
+	public function __callStatic($name, $arguments)
+	{
+		$pascalCased = Helper::pascalCase($name);
+		$normalFunction = "\WhizSid\ArrayBase\Functions\\".$pascalCased;
+		$agrFunction = "\WhizSid\ArrayBase\Functions\Agregate\\".$pascalCased;
+
+		if(class_exists($normalFunction)||class_exists($agrFunction)){
+			$function = new $normalFunction(...$arguments);
+
+			if(class_exists($agrFunction)){
+				/** @var Agregate $function */
+
+				if(count($arguments)>1)
+					$function->distinct(true);
+			}
+
+			return $function;
+		}
+	}
 }

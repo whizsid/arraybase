@@ -122,6 +122,19 @@ class Helper {
 		$table->insertDataSet($dataSet);
 	}
 	/**
+	 * Converting a string in underscore notaion to PascalCase
+	 *
+	 * @param string $str
+	 * @return string
+	 */
+	public static function pascalCase($str){
+		$camelCased = preg_replace_callback("/_([a-zA-Z0-9])/",function($matched){
+			return strtoupper($matched[1]);
+		},$str);
+
+		return ucfirst($camelCased);
+	}
+	/**
 	 * Checking the given value is in the correct type
 	 */
 	public function __callStatic($name, $arguments)

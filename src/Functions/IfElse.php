@@ -1,7 +1,7 @@
 <?php
 namespace WhizSid\ArrayBase\Query\Objects;
 
-use WhizSid\ArrayBase\Query\Objects\Functions\ABFunction;
+use WhizSid\ArrayBase\Functions\ABFunction;
 use WhizSid\ArrayBase\Query\Objects\Condition;
 
 class IfElse extends ABFunction {
@@ -55,6 +55,8 @@ class IfElse extends ABFunction {
 		}
 
 		$this->condition = $cnd;
+
+		$this->validate();
 	}
 	/**
 	 * When success the condition

@@ -1,10 +1,13 @@
 <?php
-namespace WhizSid\ArrayBase\Query\Objects\Functions;
+namespace WhizSid\ArrayBase\Functions;
 
 use WhizSid\ArrayBase\ABException;
 use WhizSid\ArrayBase\Query\Objects\Parser;
+use WhizSid\ArrayBase\AB\Traits\KeepDataSet;
 
 class ABFunction {
+	use KeepDataSet;
+	
 	protected $name="";
     /**
      * Executing the function
@@ -17,10 +20,9 @@ class ABFunction {
 	/**
 	 * Validating the arguments
 	 * 
-	 * @param int $rowId
 	 * @throws ABException
 	 */
-	public function validate($rowId){
+	public function validate(){
 
 	}
 	/**

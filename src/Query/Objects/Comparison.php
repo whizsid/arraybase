@@ -55,6 +55,7 @@ class Comparison{
      * Executing the comparison and return the value
      *
 	 * @param int $key
+	 * 
      * @return void
      */
     public function execute(int $key){
@@ -76,6 +77,7 @@ class Comparison{
 	 *
 	 * @param Column $column
 	 * @param int $key
+	 * 
 	 * @return Cell
 	 */
 	public function getCellByColumnAndRow($column,$key){

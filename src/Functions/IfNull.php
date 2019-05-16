@@ -16,5 +16,7 @@ class IfNull extends IfElse {
 		$this->else = $column;
 
 		$this->condition = $cnd;
+
+		$this->validate();
 	}
 }
