@@ -1,10 +1,9 @@
 <?php
 namespace WhizSid\ArrayBase\AB\DataSet\Row;
 
-use WhizSid\ArrayBase\AB\Traits\Aliasable;
 use WhizSid\ArrayBase\AB\Traits\Indexed;
 
-class Cell extends KeepRow {
+class Cell extends KeepRow{
 	use Indexed;
     /**
      * Value to cell

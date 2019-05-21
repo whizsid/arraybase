@@ -340,4 +340,19 @@ class DataSet extends KeepAB{
 
 		return true;
 	}
+	/**
+	 * Returning an value from dataset
+	 * 
+	 * @param mixed $var
+	 * @return mixed
+	 */
+	public function getValue($var,$rowIndex){
+		if(Helper::isColumn($var)){
+			return $this->getCell($var,$rowIndex)->getValue();
+		} else if (Helper::isFunction($var)){
+			return $var->setDataSet($this)->execute($rowIndex);
+		} else {
+			return $var;
+		}
+	}
 }

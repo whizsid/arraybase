@@ -41,8 +41,7 @@ class Comparison{
 
         if(!in_array($operator,array_keys($this->operators)))
             throw new ABException("Supplied operator is not valid. Valid operators are ".implode(",",array_keys($this->operators)));
-        
-    
+		
         $operatorNamespace = "\WhizSid\ArrayBase\Query\Objects\Operators\\".$this->operators[$operator];
 
         $operatorInst = new $operatorNamespace;

@@ -4,6 +4,7 @@ namespace WhizSid\ArrayBase\Functions\Agregate;
 use WhizSid\ArrayBase\Functions\Agregate;
 
 class GroupConcat extends Agregate {
+	protected $name = "group_concat";
 	/**
 	 * Separator to join column values
 	 *

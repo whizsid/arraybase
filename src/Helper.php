@@ -7,6 +7,8 @@ use WhizSid\ArrayBase\AB\Table;
 use WhizSid\ArrayBase\AB\Table\Column;
 use WhizSid\ArrayBase\AB;
 use PHPUnit\Framework\MockObject\BadMethodCallException;
+use WhizSid\ArrayBase\Functions\ABFunction;
+use WhizSid\ArrayBase\Functions\Agregate;
 
 /**
  * Helper class to array base functions
@@ -148,5 +150,23 @@ class Helper {
 		}
 		else
 		throw new BadMethodCallException("Invalid function called.");
+	}
+	/**
+	 * Checking a parsed value is a function or not
+	 *
+	 * @param ABFunction $func
+	 * @return boolean
+	 */
+	public static function isFunction($func){
+		return is_subclass_of($func,ABFunction::class);
+	}
+	/**
+	 * Checking a parsed value is a agregate function or not
+	 * 
+	 * @param Agregate $func
+	 * @return boolean
+	 */
+	public static function isAgregate($func){
+		return is_subclass_of($func,Agregate::class);
 	}
 }

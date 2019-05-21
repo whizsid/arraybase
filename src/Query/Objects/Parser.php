@@ -38,7 +38,26 @@ class Parser {
 		} else
 			// <<ABE27> \\
 			throw new ABException("Invalid variable given for parser.",27);
-    }
+	}
+	/**
+	 * Parsing a name for a variable
+	 *
+	 * @param mixed $arg
+	 * @return string
+	 */
+	public static function parseName($arg){
+		if(Helper::isColumn($arg)){
+			$name = $arg->getFullName();
+		} elseif(Helper::isFunction($arg)){
+			$name = $arg->getName();
+		} else if(is_null($arg)){
+			return "'NULL'";
+		} else {
+			$name = "'$arg'";
+		}
+
+		return $name;
+	}
     /**
      * Getting an array from a subquery or array
      * 

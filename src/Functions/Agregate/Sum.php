@@ -4,6 +4,8 @@ namespace WhizSid\ArrayBase\Functions\Agregate;
 use WhizSid\ArrayBase\Functions\Agregate;
 
 class Sum extends Agregate {
+	protected $name = "sum";
+	
 	public function __construct($clmn)
 	{
 		parent::__construct($clmn);

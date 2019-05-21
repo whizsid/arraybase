@@ -47,6 +47,7 @@ class Agregate extends ABFunction {
 	 */
 	public function setGroupedSet($set){
 		$this->groupedDataSet = $set;
+		return $this;
 	}
 	/**
 	 * Setter for distinct
@@ -87,7 +88,7 @@ class Agregate extends ABFunction {
 	 * 
 	 * @return mixed
 	 */
-	public function execute(){
+	public function execute($rowIndex=0){
 		$dataSet = $this->groupedDataSet->getDataSet();
 
 		$this->setDataSet($dataSet);

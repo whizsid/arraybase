@@ -11,6 +11,7 @@ use WhizSid\ArrayBase\Query\Objects\GroupedDataSet;
 /**
  * @property DataSet $dataSet
  * @property GroupedDataSet $groupedSets
+ * @property Column[] $columns
  */
 trait Groupable {
 	/**
@@ -25,6 +26,12 @@ trait Groupable {
 	 * @var GroupedDataSet[]
 	 */
 	protected $groupedSets = [];
+	/**
+	 * Wheather that this query is grouped or not
+	 *
+	 * @var boolean
+	 */
+	protected $grouped = false;
 	/**
 	 * Grouping the data set
 	 *
@@ -64,9 +71,21 @@ trait Groupable {
 		$dataSet = $this->dataSet->cloneMe();
 
 		if(empty($this->groups)){
-			$groupedSet = new GroupedDataSet;
-			$groupedSet->setDataSet($dataSet);
-			$groupedSet->setHash(1);
+			$hasAgregate = false;
+
+			foreach ($this->columns as $key => $column) {
+				if(Helper::isAgregate($column))
+					$hasAgregate=true;
+			}
+
+			if($hasAgregate){
+
+				$groupedSet = new GroupedDataSet;
+				$groupedSet->setDataSet($dataSet);
+				$groupedSet->setHash(1);
+				$this->grouped = true;
+				$this->groupedSets[] = $groupedSet;
+			}
 		} else {
 
 			$aliases = $dataSet->getAliases();
@@ -106,7 +125,10 @@ trait Groupable {
 					$groupedSet->setHash($hash);
 					$this->groupedSets[] = $groupedSet;
 				}
+
 			}
+
+			$this->grouped = true;
 		}
 
 	}

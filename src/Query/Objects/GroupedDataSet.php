@@ -2,6 +2,9 @@
 namespace WhizSid\ArrayBase\Query\Objects;
 
 use WhizSid\ArrayBase\AB\DataSet;
+use WhizSid\ArrayBase\Helper;
+use WhizSid\ArrayBase\Functions\Agregate;
+use WhizSid\ArrayBase\Functions\ABFunction;
 
 class GroupedDataSet {
 	/**
@@ -48,5 +51,24 @@ class GroupedDataSet {
 	 */
 	public function match($matchMe){
 		return $this->hash==$matchMe;
+	}
+	/**
+	 * Returning a value from grouped set
+	 * 
+	 * @param mixed $var
+	 * @return mixed
+	 */
+	public function getValue($var){
+		if(Helper::isColumn($var)){
+			return $this->dataSet->getCell($var,0)->getValue();
+		} else if (Helper::isAgregate($var)){
+			/** @var Agregate $var */
+
+			return $var->setGroupedSet($this)->execute();
+		} else if (Helper::isFunction($var)){
+			return $var->setDataSet($this->dataSet)->execute(0);
+		} else {
+			return $var;
+		}
 	}
 }

@@ -5,17 +5,16 @@ use WhizSid\ArrayBase\ABException;
 use WhizSid\ArrayBase\Query\Objects\Parser;
 use WhizSid\ArrayBase\AB\Traits\KeepDataSet;
 use WhizSid\ArrayBase\Helper;
+use WhizSid\ArrayBase\AB\Traits\Aliasable;
 
 class ABFunction {
-	use KeepDataSet;
-	
-	protected $name="";
+	use KeepDataSet,Aliasable;
     /**
      * Executing the function
      *
      * @return void
      */
-	public function execute(){
+	public function execute($rowIndex=0){
 
 	}
 	/**

@@ -9,5 +9,5 @@ interface Operator {
      * @param mixed $value2
      * @return bool
      */
-    public function compare($value1,$value2);
+	public function compare($value1,$value2);
 }
