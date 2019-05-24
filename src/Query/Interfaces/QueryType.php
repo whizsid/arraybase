@@ -1,13 +1,13 @@
 <?php
 namespace WhizSid\ArrayBase\Query\Interfaces;
 
-use WhizSid\ArrayBase\AB\DataSet;
+use WhizSid\ArrayBase\Query\Objects\ReturnSet;
 
 interface QueryType {
 	/**
 	 * Executing the query type
 	 *
-	 * @return DataSet
+	 * @return ReturnSet
 	 */
 	public function execute();
 }

@@ -207,20 +207,6 @@ class DataSet extends KeepAB{
 		}
 	}
 
-	public function fetchAssoc(){
-		$fetched = [];
-
-		foreach ($this->rows as $row) {
-			$arrRow = [];
-			foreach($this->aliases as $cellIndex => $alias){
-				$arrRow[$alias] = $row->getCell($cellIndex)->getValue();
-			}
-
-			$fetched[] = $arrRow;
-		}
-
-		return $fetched;
-	}
 	/**
 	 * Returning the cell by row index and cell name or index
 	 *

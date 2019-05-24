@@ -5,6 +5,7 @@ use WhizSid\ArrayBase\AB\Table;
 use WhizSid\ArrayBase\AB\Table\Column;
 use WhizSid\ArrayBase\Query\Type\Select;
 use WhizSid\ArrayBase\Query\Type\Insert;
+use WhizSid\ArrayBase\Query\Type\Update;
 
 class Query extends KeepAB {
     protected $tables = [];
@@ -37,6 +38,22 @@ class Query extends KeepAB {
 			->setQuery($this);
 
 		return $query;
+	}
+	/**
+	 * Making a update query
+	 *
+	 * @param Table $table
+	 * @return Update
+	 */
+	public function update($table){
+		$query = new Update();
+
+		$query
+			->setTable($table)
+            ->setQuery($this)
+            ->setAB($this->ab);
+
+        return $query;
 	}
     /**
      * Adding a new table to the query

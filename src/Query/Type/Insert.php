@@ -8,6 +8,7 @@ use WhizSid\ArrayBase\AB\DataSet;
 use WhizSid\ArrayBase\Helper;
 use WhizSid\ArrayBase\Query\Interfaces\QueryType;
 use WhizSid\ArrayBase\ABException;
+use WhizSid\ArrayBase\Query\Objects\ReturnSet;
 
 class Insert extends KeepQuery implements QueryType{
 	/**
@@ -76,25 +77,21 @@ class Insert extends KeepQuery implements QueryType{
 	 */
 	public function execute()
 	{
-		$startTime = time();
+		$startTime = microtime(true);
 
 		$this->__validate();
 		
 		$lastId = $this->table->insertDataSet($this->dataSet);
 
-		$endTime = time();
+		$endTime = microtime(true);
 
-		$info = new DataSet();
+		$returnSet = new ReturnSet();
 
-		$info->addAlias("affected_rows");
-		$info->addAlias("last_index");
-		$info->addAlias("time");
 
-		$row = $info->newRow();
-		$row->newCell($this->dataSet->getCount());
-		$row->newCell($lastId);
-		$row->newCell($endTime-$startTime);
+		$returnSet->setAffectedRowsCount($this->dataSet->getCount());
+		$returnSet->setTime($endTime-$startTime);
+		$returnSet->setLastIndex($lastId);
 
-		return $info;
+		return $returnSet;
 	}
 }

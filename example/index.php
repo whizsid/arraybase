@@ -60,21 +60,32 @@ $ab->createTable('tbl_another',[
 	'ant_id'=>"B"]
 ]);
 
-$selectQuery = $ab->query()->select(
-	$ab->tbl_customer,
-	$ab::groupConcat(AB_DISTINCT,$ab->tbl_facility->fac_code)->as('new_sum'),
-	$ab->tbl_customer->c_id,
-	$ab->tbl_another->ant_id,
-	$ab->tbl_facility->fac_code
-);
+// $selectQuery = $ab->query()->select(
+// 	$ab->tbl_customer,
+// 	$ab::groupConcat(AB_DISTINCT,$ab->tbl_facility->fac_code)->as('new_sum'),
+// 	$ab->tbl_customer->c_id,
+// 	$ab->tbl_another->ant_id,
+// 	$ab->tbl_facility->fac_code
+// );
 
-$selectQuery->join('inner',$ab->tbl_facility)->on($ab->tbl_customer->c_id,'=',$ab->tbl_facility->c_id);
-$selectQuery->join('inner',$ab->tbl_another)->on($ab->tbl_customer->c_id,'=',$ab->tbl_another->c_id);
-$selectQuery->orderBy($ab->tbl_customer->c_id,'desc');
-$selectQuery->groupBy($ab->tbl_another->ant_id);
-$selectQuery->where($ab->tbl_another->ant_id,'=',"A");
-$selectQuery->limit(1);
+// $selectQuery->join('inner',$ab->tbl_facility)->on($ab->tbl_customer->c_id,'=',$ab->tbl_facility->c_id);
+// $selectQuery->join('inner',$ab->tbl_another)->on($ab->tbl_customer->c_id,'=',$ab->tbl_another->c_id);
+// $selectQuery->orderBy($ab->tbl_customer->c_id,'desc');
+// $selectQuery->groupBy($ab->tbl_another->ant_id);
+// $selectQuery->where($ab->tbl_another->ant_id,'=',"A");
+// $selectQuery->limit(1);
+// $result = $selectQuery->execute()->fetchAssoc();
+
+$updateQuery = $ab->query()->update($ab->tbl_customer)->set($ab->tbl_customer->c_name,'Updated name');
+$updateQuery->where($ab->tbl_customer->c_id,2);
+// $updateQuery->join(AB_JOIN_INNER,$ab->tbl_another)->on($ab->tbl_another->c_id,'=',$ab->tbl_customer->c_id);
+$updateQuery->limit(1);
+$updateQuery->execute();
+
+$selectQuery = $ab->query()->select($ab->tbl_customer);
+
 $result = $selectQuery->execute()->fetchAssoc();
+
 
 var_dump($result);
 

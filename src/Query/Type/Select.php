@@ -15,6 +15,7 @@ use WhizSid\ArrayBase\AB\DataSet;
 use WhizSid\ArrayBase\Query\Objects\Parser;
 use WhizSid\ArrayBase\AB\DataSet\Row;
 use WhizSid\ArrayBase\Query\Type;
+use WhizSid\ArrayBase\Query\Objects\ReturnSet;
 
 class Select extends Type implements QueryType{
 	use Joinable,Whereable,Limitable,Orderable,Groupable,KeepDataSet;
@@ -67,8 +68,11 @@ class Select extends Type implements QueryType{
     public function getColumns(){
         return $this->columns;
 	}
-	
+	/**
+	 * @inheritDoc
+	 */
 	public function execute(){
+		$startTime = \microtime(true);
 		$this->resolveDataSet();
 
 		$this->executeJoin();
@@ -78,7 +82,13 @@ class Select extends Type implements QueryType{
 		$this->executeSelect();
 		$this->executeLimit();
 
-		return $this->dataSet;
+		$endTime = \microtime(true);
+		
+		$returnSet = new ReturnSet();
+		$returnSet->setDataSet($this->dataSet);
+		$returnSet->setTime($endTime-$startTime);
+		
+		return $returnSet;
 	}
 
 	public function executeSelect(){
@@ -86,19 +96,33 @@ class Select extends Type implements QueryType{
 
 		$dataSet = new DataSet();
 
+		$columns = $this->columns;
+
+		if(empty($columns)){
+			$columns = array_values($this->table->getColumns());
+
+			foreach ($this->joins as $key => $join) {
+				$table = $join->getTable();
+
+				$joinedTableColumns = array_values($table->getColumns());
+
+				$columns = array_merge($columns,$joinedTableColumns);
+			}
+		}
+
 		foreach($columns as $column){
 			$dataSet->newColumn(Parser::parseName($column));
 		}
 
 		$rows = [];
-		
+
 		if($this->grouped){
 			/** @var GroupedDataSet $groupedSet */
 			foreach($this->groupedSets as $key=>$groupedSet){
 				$row = new Row();
 				$row->setDataSet($dataSet);
 				$row->setIndex($key);
-				foreach($this->columns as $column){
+				foreach($columns as $column){
 					$row->newCell($groupedSet->getValue($column));
 				}
 				$rows[] = $row;
@@ -110,7 +134,7 @@ class Select extends Type implements QueryType{
 				$row = new Row();
 				$row->setDataSet($dataSet);
 				$row->setIndex($i);
-				foreach($this->columns as $column){
+				foreach($columns as $column){
 					$row->newCell($this->dataSet->getValue($column,$i));
 				}
 				$rows[] = $row;

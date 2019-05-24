@@ -13,17 +13,17 @@ class Join extends KeepQuery{
 
     protected $table;
 
-    protected $availableModes = ["inner","left","right","outer"];
+    protected $availableModes = [AB_JOIN_INNER,AB_JOIN_LEFT,AB_JOIN_OUTER,AB_JOIN_LEFT];
 
-    protected $defaultMode = "inner";
+    protected $defaultMode = AB_JOIN_INNER;
     
-    public function __construct( string $mode = null)
+    public function __construct($mode = null)
     {
         if(!isset($mode)) $mode = $this->defaultMode;
 
         if(!in_array($mode,$this->availableModes))
             // <ABE15> \\
-            throw new ABException("Invalid join method supplied. Available join methods are ".implode(",",$this->availableModes));
+            throw new ABException("Invalid join method supplied.",15);
 
         $this->mode = array_search($mode,$this->availableModes)+1;
     }
