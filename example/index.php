@@ -2,13 +2,13 @@
 require_once "../vendor/autoload.php";
 
 use WhizSid\ArrayBase\AB;
-use WhizSid\ArrayBase\AB\Table;
-use WhizSid\ArrayBase\AB\Table\Column;
 
 // Creating a array base instance
 $ab = new AB;
 
 echo "ArrayBase Connection Created";
+echo "<br/>";
+echo microtime(true);
 echo "<br/>";
 
 // Creating a array base table
@@ -62,16 +62,25 @@ $ab->createTable('tbl_another',[
 
 $selectQuery = $ab->query()->select(
 	$ab->tbl_customer,
-	$ab::groupConcat(AB_DISTINCT,$ab->tbl_customer->c_id)->as('new_concated'),
-	$ab->tbl_customer->c_id
+	$ab::groupConcat(AB_DISTINCT,$ab->tbl_facility->fac_code)->as('new_sum'),
+	$ab->tbl_customer->c_id,
+	$ab->tbl_another->ant_id,
+	$ab->tbl_facility->fac_code
 );
 
 $selectQuery->join('inner',$ab->tbl_facility)->on($ab->tbl_customer->c_id,'=',$ab->tbl_facility->c_id);
 $selectQuery->join('inner',$ab->tbl_another)->on($ab->tbl_customer->c_id,'=',$ab->tbl_another->c_id);
-$selectQuery->orderBy($ab->tbl_facility->fac_code,'asc')->orderBy($ab->tbl_another->ant_id,'asc');
-// $selectQuery->groupBy($ab->tbl_customer->c_id);
+$selectQuery->orderBy($ab->tbl_customer->c_id,'desc');
+$selectQuery->groupBy($ab->tbl_another->ant_id);
+$selectQuery->where($ab->tbl_another->ant_id,'=',"A");
+$selectQuery->limit(1);
 $result = $selectQuery->execute()->fetchAssoc();
 
 var_dump($result);
+
+echo "<br/>";
+echo microtime(true);
+echo "<br/>";
+
 die;
 

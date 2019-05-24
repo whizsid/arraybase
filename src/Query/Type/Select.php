@@ -1,7 +1,6 @@
 <?php
 namespace WhizSid\ArrayBase\Query\Type;
 
-use WhizSid\ArrayBase\KeepQuery;
 use WhizSid\ArrayBase\AB\Table;
 use WhizSid\ArrayBase\AB\Table\Column;
 use WhizSid\ArrayBase\Query\Traits\Joinable;
@@ -15,15 +14,16 @@ use WhizSid\ArrayBase\Query\Objects\GroupedDataSet;
 use WhizSid\ArrayBase\AB\DataSet;
 use WhizSid\ArrayBase\Query\Objects\Parser;
 use WhizSid\ArrayBase\AB\DataSet\Row;
+use WhizSid\ArrayBase\Query\Type;
 
-class Select extends KeepQuery implements QueryType{
+class Select extends Type implements QueryType{
 	use Joinable,Whereable,Limitable,Orderable,Groupable,KeepDataSet;
     /**
      * Table tha in from clause
      *
      * @var Table
      */
-    protected $from;
+    protected $table;
     /**
      * Columns that we are selecting
      *
@@ -36,7 +36,7 @@ class Select extends KeepQuery implements QueryType{
      * @param Table $tbl
      */
     public function setFrom($tbl){
-        $this->from = $tbl;
+        $this->table = $tbl;
         // Registering the table
         $this->query->addTable($tbl);
         return $this;
@@ -47,7 +47,7 @@ class Select extends KeepQuery implements QueryType{
      * @return Table
      */
     public function getFrom(){
-        return $this->from;
+        return $this->table;
     }
     /**
      * Setting columns in select clause
@@ -69,19 +69,15 @@ class Select extends KeepQuery implements QueryType{
 	}
 	
 	public function execute(){
-		/** @var DataSet $mainDataSet */
-		$orgMainDataSet = $this->from->__getDataSet();
-
-		$mainDataSet = $orgMainDataSet->cloneMe();
-		$mainDataSet->globalizeMe($this->from->getName());
-
-		$this->dataSet = $mainDataSet;
+		$this->resolveDataSet();
 
 		$this->executeJoin();
+		$this->executeWhere();
 		$this->executeOrder();
 		$this->executeGroupBy();
 		$this->executeSelect();
-		
+		$this->executeLimit();
+
 		return $this->dataSet;
 	}
 
@@ -113,7 +109,7 @@ class Select extends KeepQuery implements QueryType{
 			for ($i=0; $i < $count; $i++) { 
 				$row = new Row();
 				$row->setDataSet($dataSet);
-				$row->setIndex($key);
+				$row->setIndex($i);
 				foreach($this->columns as $column){
 					$row->newCell($this->dataSet->getValue($column,$i));
 				}
