@@ -182,12 +182,12 @@ class DataSet extends KeepAB{
 		if(count($this->aliases)==1){
 			foreach ($data as  $cell) {
 				$row = $this->newRow();
-				$row->newCell($cell->getValue());
+				$row->newCell($cell);
 			}
 		}
 		else {
             foreach ($this->rows as $key => &$row) {
-                $row->newCell($data[$key]->getValue());
+                $row->newCell($data[$key]);
             }
 		}
 		

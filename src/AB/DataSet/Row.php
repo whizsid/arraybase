@@ -3,6 +3,7 @@ namespace WhizSid\ArrayBase\AB\DataSet;
 
 use WhizSid\ArrayBase\AB\DataSet\Row\Cell;
 use WhizSid\ArrayBase\AB\Traits\Indexed;
+use WhizSid\ArrayBase\Helper;
 
 class Row extends KeepDataSet {
 	use Indexed;
@@ -19,15 +20,21 @@ class Row extends KeepDataSet {
      * @return Cell
      */
     public function newCell($value){
-		$cell = new Cell();
+
+		if(!Helper::isCell($value)){
+			$cell = new Cell();
+			
+			$cell->setRow($this);
+			$cell->setDataSet($this->dataSet);
+			$cell->setValue($value);
+
+			$index = count($this->cells);
+			$cell->setIndex($index);
+		} else {
+			$cell = $value;
+
+		}
 		
-		$cell->setRow($this);
-		$cell->setDataSet($this->dataSet);
-		$cell->setValue($value);
-
-		$index = count($this->cells);
-		$cell->setIndex($index);
-
 		$this->cells[] = $cell;
 
 		return $cell;
@@ -57,5 +64,9 @@ class Row extends KeepDataSet {
 		}
 
 		return $row;
+	}
+
+	public function insertCell(){
+
 	}
 }

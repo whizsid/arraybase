@@ -111,7 +111,7 @@ trait Joinable {
 
 			$leftAliases = $leftDataSet->getAliases();
 			$rightAliases = $rightDataSet->getAliases();
-
+			
 			foreach($leftAliases as $leftAliase){
 				$joinedSet->newColumn($leftAliase);
 			}

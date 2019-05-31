@@ -77,8 +77,8 @@ $ab->createTable('tbl_another',[
 // $result = $selectQuery->execute()->fetchAssoc();
 
 $updateQuery = $ab->query()->update($ab->tbl_customer)->set($ab->tbl_customer->c_name,'Updated name');
-$updateQuery->where($ab->tbl_customer->c_id,2);
-// $updateQuery->join(AB_JOIN_INNER,$ab->tbl_another)->on($ab->tbl_another->c_id,'=',$ab->tbl_customer->c_id);
+$updateQuery->where($ab->tbl_another->ant_id,"B");
+$updateQuery->join(AB_JOIN_INNER,$ab->tbl_another)->on($ab->tbl_another->c_id,'=',$ab->tbl_customer->c_id);
 $updateQuery->limit(1);
 $updateQuery->execute();
 
