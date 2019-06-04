@@ -69,6 +69,7 @@ trait Joinable {
 	protected function makeNewSetByDualRows($firstRow,$secondRow){
 		$fristAliases = $firstRow->getDataSet()->getAliases();
 		$secondAliases = $secondRow->getDataSet()->getAliases();
+		$index = $firstRow->getIndex();
 
 		$tmpDataSet = new DataSet();
 
@@ -80,6 +81,9 @@ trait Joinable {
 			if(!in_array($alias,$fristAliases))
 				$tmpDataSet->addColumnData($alias,[$secondRow->getCell($key)]);
 		}
+
+		$row = $tmpDataSet->getByIndex(0);
+		$row->setIndex($index);
 
 		return $tmpDataSet;
 	}

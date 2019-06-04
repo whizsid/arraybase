@@ -82,6 +82,12 @@ $updateQuery->join(AB_JOIN_INNER,$ab->tbl_another)->on($ab->tbl_another->c_id,'=
 $updateQuery->limit(1);
 $updateQuery->execute();
 
+$deleteQuery = $ab->query()->delete($ab->tbl_customer);
+$deleteQuery->where($ab->tbl_another->ant_id,"B");
+$deleteQuery->join(AB_JOIN_INNER,$ab->tbl_another)->on($ab->tbl_another->c_id,'=',$ab->tbl_customer->c_id);
+$deleteQuery->limit(1);
+$deleteQuery->execute();
+
 $selectQuery = $ab->query()->select($ab->tbl_customer);
 
 $result = $selectQuery->execute()->fetchAssoc();

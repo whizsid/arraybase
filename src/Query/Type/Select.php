@@ -83,11 +83,11 @@ class Select extends Type implements QueryType{
 		$this->executeLimit();
 
 		$endTime = \microtime(true);
-		
+
 		$returnSet = new ReturnSet();
 		$returnSet->setDataSet($this->dataSet);
 		$returnSet->setTime($endTime-$startTime);
-		
+
 		return $returnSet;
 	}
 

@@ -6,6 +6,7 @@ use WhizSid\ArrayBase\AB\Table\Column;
 use WhizSid\ArrayBase\Query\Type\Select;
 use WhizSid\ArrayBase\Query\Type\Insert;
 use WhizSid\ArrayBase\Query\Type\Update;
+use WhizSid\ArrayBase\Query\Type\Delete;
 
 class Query extends KeepAB {
     protected $tables = [];
@@ -50,6 +51,22 @@ class Query extends KeepAB {
 
 		$query
 			->setTable($table)
+            ->setQuery($this)
+            ->setAB($this->ab);
+
+        return $query;
+	}
+	/**
+	 * Creating a new delete query
+	 *
+	 * @param Table $from
+	 * @return Delete
+	 */
+	public function delete($from){
+		$query = new Delete();
+
+		$query
+			->setFrom($from)
             ->setQuery($this)
             ->setAB($this->ab);
 

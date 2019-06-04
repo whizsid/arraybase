@@ -76,11 +76,6 @@ trait Orderable {
 			return 1;
 		});
 
-		/** @var Row $row */
-		foreach ($rows as $key => $row) {
-			$row->setIndex($key);
-		}
-
 		$dataSet->__setRows($rows);
 
 		$this->dataSet = $dataSet;
