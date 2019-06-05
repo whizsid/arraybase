@@ -1,5 +1,5 @@
 <?php
-namespace Tests;
+namespace WhizSid\ArrayBase\Tests;
 
 use PHPUnit\Framework\TestCase;
 use WhizSid\ArrayBase\AB;
