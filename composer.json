@@ -13,7 +13,9 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {},
+    "require": {
+		"php": "^7.2"
+	},
     "autoload":{
         "psr-4":{
             "WhizSid\\ArrayBase\\":"src/"
