@@ -105,8 +105,8 @@ $selectQuery = $ab->query()->select(
 	$ab->tbl_facility->fac_code
 );
 
-$selectQuery->join('inner',$ab->tbl_facility)->on($ab->tbl_customer->c_id,'=',$ab->tbl_facility->c_id);
-$selectQuery->join('inner',$ab->tbl_another)->on($ab->tbl_customer->c_id,'=',$ab->tbl_another->c_id);
+$selectQuery->join(AB_JOIN_INNER,$ab->tbl_facility)->on($ab->tbl_customer->c_id,'=',$ab->tbl_facility->c_id);
+$selectQuery->join(AB_JOIN_INNER,$ab->tbl_another)->on($ab->tbl_customer->c_id,'=',$ab->tbl_another->c_id);
 $selectQuery->orderBy($ab->tbl_customer->c_id,'desc');
 $selectQuery->groupBy($ab->tbl_another->ant_id);
 $selectQuery->where($ab->tbl_another->ant_id,'=',"A");
