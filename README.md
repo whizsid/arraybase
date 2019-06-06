@@ -1,8 +1,13 @@
-# PHP Array Base
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
-[![Packagist: Version](https://img.shields.io/packagist/v/whizsid/arraybase.svg)](https://github.com/whizsid/arraybase/tree/0.0.1)
-[![Packagist: Downloads](https://img.shields.io/packagist/dt/whizsid/arraybase.svg)](https://packagist.org/packages/whizsid/arraybase)
+<p align="center"><img src="https://i.imgur.com/Z9CFgLB.png"></p>
+
+---
+
+<p align="center">
+<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-brightgreen.svg" alt="License: MIT"></a>
+<a href="https://packagist.org/packages/whizsid/arraybase"><img src="https://img.shields.io/packagist/dt/whizsid/arraybase.svg" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/whizsid/arraybase"><img src="https://img.shields.io/packagist/v/whizsid/arraybase.svg" alt="Latest Stable Version"></a>
+</p>
 
 Runtime SQL like query lanaguage for manipulate php arrays. written in pure php and not using any sql engine. Note:- this is not an any kind of query builder.
 
