@@ -4,7 +4,7 @@
 [![Packagist: Version](https://img.shields.io/packagist/v/whizsid/arraybase.svg)](https://github.com/whizsid/arraybase/tree/0.0.1)
 [![Packagist: Downloads](https://img.shields.io/packagist/dt/whizsid/arraybase.svg)](https://packagist.org/packages/whizsid/arraybase)
 
-Runtime SQL like query lanaguage for manipulate php arrays. written in pure php and not using any sql engine. Note:- this is not an any king of query builder.
+Runtime SQL like query lanaguage for manipulate php arrays. written in pure php and not using any sql engine. Note:- this is not an any kind of query builder.
 
 ## Installation
 

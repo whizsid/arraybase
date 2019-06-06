@@ -33,7 +33,7 @@ class DataSet extends KeepAB{
      * @param integer $key
      * @return Row
      */
-    public function getByIndex($key){
+    public function getRow($key){
         return $this->rows[$key];
     }
     /**
@@ -215,7 +215,7 @@ class DataSet extends KeepAB{
 	 * @return Cell
 	 */
 	public function getCell($column,$rowIndex){
-		$row = $this->getByIndex($rowIndex);
+		$row = $this->getRow($rowIndex);
 
 		if(Helper::isColumn($column)){
 			$column = $column->getTable()->getName().'.'.$column->getName();

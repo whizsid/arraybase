@@ -82,7 +82,7 @@ trait Joinable {
 				$tmpDataSet->addColumnData($alias,[$secondRow->getCell($key)]);
 		}
 
-		$row = $tmpDataSet->getByIndex(0);
+		$row = $tmpDataSet->getRow(0);
 		$row->setIndex($index);
 
 		return $tmpDataSet;
@@ -129,14 +129,14 @@ trait Joinable {
 			$rightDataSetCount = $rightDataSet->getCount();
 
 			for ($i=0; $i < $leftDataSetCount; $i++) { 
-				$leftRow = $leftDataSet->getByIndex($i);
+				$leftRow = $leftDataSet->getRow($i);
 
 				$foundOneRight = false;
 				for ($j=0; $j < $rightDataSetCount; $j++) { 
 					
 					if(!($foundOneRight&&$mode!=AB_JOIN_INNER)){
 
-						$rightRow = $rightDataSet->getByIndex($j);
+						$rightRow = $rightDataSet->getRow($j);
 
 						$tmpDataSet = $this->makeNewSetByDualRows($leftRow,$rightRow);
 

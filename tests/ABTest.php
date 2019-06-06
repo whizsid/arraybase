@@ -1,35 +1,16 @@
 <?php
 namespace WhizSid\ArrayBase\Tests;
 
-use PHPUnit\Framework\TestCase;
-use WhizSid\ArrayBase\AB;
-use WhizSid\ArrayBase\AB\Table;
-use WhizSid\ArrayBase\AB\Table\Column;
 use WhizSid\ArrayBase\Helper;
 use WhizSid\ArrayBase\ABException;
+use WhizSid\ArrayBase\ABTestCase;
 
-class ABTest extends TestCase {
-	/**
-	 * ArrayBase instance to test
-	 *
-	 * @var AB
-	 */
-	protected $ab;
+class ABTest extends ABTestCase {
 
-	public function __construct()
-	{
-		parent::__construct();
-		$this->ab = new AB();
-
-	}
 
 	public function testCreateTable(){
 
-		$this->ab->createTable('test',function(Table $table){
-			$table->createColumn('testColumn',function(Column $column){
-				$column->setType('varchar');
-			});
-		});
+		$this->createTestTable();
 
 		$this->assertTrue(Helper::isTable($this->ab->getTable('test')));
 		

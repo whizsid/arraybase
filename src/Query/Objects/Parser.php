@@ -30,7 +30,7 @@ class Parser {
 			$value = $ref->getColumn()
 				->getTable()
 				->__getDataSet()
-				->getByIndex($rowIndex)
+				->getRow($rowIndex)
 				->getCell($columnIndex)
 				->getValue();
 

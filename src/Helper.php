@@ -19,6 +19,10 @@ use WhizSid\ArrayBase\Functions\Agregate;
  * @method static boolean isDataSet(mixed $dataSet)
  * @method static boolean isCell(mixed $cell)
  * @method static boolean isQuery(mixed $query)
+ * @method static boolean isSelectQuery(mixed $select)
+ * @method static boolean isUpdateQuery(mixed $update)
+ * @method static boolean isInsertQuery(mixed $insert)
+ * @method static boolean isDeleteQuery(mixed $delete)
  */
 class Helper {
 	/**
@@ -32,7 +36,11 @@ class Helper {
 		'bindedcolumn'=>'WhizSid\ArrayBase\Query\Objects\ColumnWithIndex',
 		'dataset'=>'WhizSid\ArrayBase\AB\DataSet',
 		'cell'=>'WhizSid\ArrayBase\AB\DataSet\Row\Cell',
-		'query'=>'WhizSid\ArrayBase\Query'
+		'query'=>'WhizSid\ArrayBase\Query',
+		'selectquery'=>'WhizSid\ArrayBase\Query\Type\Select',
+		'updatequery'=>'WhizSid\ArrayBase\Query\Type\Update',
+		'insertquery'=>'WhizSid\ArrayBase\Query\Type\Insert',
+		'deletequery'=>'WhizSid\ArrayBase\Query\Type\Delete',
 	];
 	/**
 	 * Parsing data array to dataset
@@ -94,7 +102,7 @@ class Helper {
 		// Creating a array base table
 		$ab->createTable($name,function(Table $tbl)use ($dataSet){
 
-			$firstRow = $dataSet->getByIndex(0);
+			$firstRow = $dataSet->getRow(0);
 
 			$aliases = $dataSet->getAliases();
 
@@ -121,7 +129,9 @@ class Helper {
 
 		$table = $ab->getTable($name);
 
-		$table->insertDataSet($dataSet);
+		$ab->query()->insert()->into($table)->dataSet($dataSet)->execute();
+
+		return $table;
 	}
 	/**
 	 * Converting a string in underscore notaion to PascalCase

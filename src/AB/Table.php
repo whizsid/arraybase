@@ -93,7 +93,15 @@ class Table extends KeepAB{
      */
     public function getColumns(){
         return $this->columns;
-    }
+	}
+	/**
+	 * Returning all column names
+	 *
+	 * @return string[]
+	 */
+	public function getColumnNames(){
+		return $this->columnNames;
+	}
     /**
      * Short way to get column by name
      * 
@@ -130,62 +138,6 @@ class Table extends KeepAB{
         $clonedMe->__setColumns($columns);
 
         return $clonedMe;
-	}
-	/**
-	 * Insert a new data set
-	 *
-	 * @param DataSet $set
-	 * @return void
-	 */
-	public function insertDataSet($set){
-		$aliases = $set->getAliases();
-
-		foreach ($aliases as $alias) {
-			if(array_search($alias,$this->columnNames)<0)
-				// <ABE20> \\
-				throw new ABException("Invalid column name '$alias' in new Dataset.",20);
-		}
-
-		$rowCount = $set->getCount();
-		
-		// Creating a new data set
-		$newSet = new DataSet();
-
-		$originalAliases = $this->dataSet->getAliases();
-
-		for ($i=0; $i < $rowCount; $i++) { 
-			$newRow = $newSet->newRow();
-			$oldRow = $set->getByIndex($i);
-
-			foreach ($originalAliases as $key => $originalAlias) {
-				if($i==0)
-					$newSet->addAlias($originalAlias);
-				$srcIndex = array_search($originalAlias,$aliases);
-				$column = $this->getColumn($originalAlias);
-
-				$value = null;
-				if(is_numeric($srcIndex)){
-					$cell = $oldRow->getCell($srcIndex);
-					$value = $cell?$cell->getValue():null;
-				}
-				else if($column->isAutoIncrement()){
-					$value = $newRow->getIndex()+1;
-				}
-
-				if(is_null($value))
-					$value = $column->getDefaultValue();
-
-				$column->validateValue($value);
-
-				$newRow->newCell($value);
-
-			}
-		}
-
-		$this->dataSet->mergeDataSet($newSet);
-
-		return $this->dataSet->getCount()-1;
-
 	}
 	/**
 	 * Returning the data set
