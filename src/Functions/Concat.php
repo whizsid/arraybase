@@ -41,7 +41,7 @@ class Concat extends ABFunction {
 	 * @inheritDoc
 	 * 
 	 */
-	public function execute(int $rowId){
+	public function execute(int $rowId=0){
 		$concated = "";
 
 		foreach ($this->concats as $key => $concat) {

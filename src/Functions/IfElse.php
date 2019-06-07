@@ -95,7 +95,7 @@ class IfElse extends ABFunction {
 	 * @inheritDoc
 	 * 
 	 */
-	public function execute(int $rowId){
+	public function execute(int $rowId=0){
 		$success = $this->condition->setDataSet($this->dataSet)->execute($rowId);
 
 		if($success){
