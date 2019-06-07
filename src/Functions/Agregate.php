@@ -88,7 +88,7 @@ class Agregate extends ABFunction {
 	 * 
 	 * @return mixed
 	 */
-	public function execute($rowIndex=0){
+	public function execute(int $rowIndex=0){
 		$dataSet = $this->groupedDataSet->getDataSet();
 
 		$this->setDataSet($dataSet);

@@ -14,7 +14,7 @@ class ABFunction {
      *
      * @return void
      */
-	public function execute($rowIndex=0){
+	public function execute(int $rowIndex=0){
 
 	}
 	/**
