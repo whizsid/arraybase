@@ -1,23 +1,25 @@
 <?php
+
 namespace WhizSid\ArrayBase\Functions\Agregate;
 
 use WhizSid\ArrayBase\Functions\Agregate;
 
-class Sum extends Agregate {
-	protected $name = "sum";
-	
-	public function __construct($clmn)
-	{
-		parent::__construct($clmn);
-	}
+class Sum extends Agregate
+{
+    protected $name = 'sum';
 
-	public function validateValue($value)
-	{
-		return is_numeric($value);
-	}
+    public function __construct($clmn)
+    {
+        parent::__construct($clmn);
+    }
 
-	protected function getReturn($arr)
-	{
-		return array_sum($arr);
-	}
+    public function validateValue($value)
+    {
+        return is_numeric($value);
+    }
+
+    protected function getReturn($arr)
+    {
+        return array_sum($arr);
+    }
 }

@@ -1,53 +1,66 @@
 <?php
+
 namespace WhizSid\ArrayBase\AB\Table\DataType;
 
 use WhizSid\ArrayBase\ABException;
 
-class Integer implements DataType{
+class Integer implements DataType
+{
     /**
      * @inherit
      *
-     * {@inheritDoc}
+     * {@inheritdoc}
      * {@inherit}
      */
-    public function validate($int){
-        return !!is_numeric($int);
+    public function validate($int)
+    {
+        return (bool) is_numeric($int);
     }
+
     /**
      * @inherit
      *
-     * {@inheritDoc}
+     * {@inheritdoc}
      * {@inherit}
      */
-    public function format($int){
+    public function format($int)
+    {
         return round($int);
     }
+
     /**
      * @inherit
      *
-     * {@inheritDoc}
+     * {@inheritdoc}
      * {@inherit}
      */
-    public function getName(){
+    public function getName()
+    {
         return 'integer';
     }
+
     /**
      * @inherit
      *
-     * {@inheritDoc}
+     * {@inheritdoc}
      * {@inherit}
      */
-    public function getDefaultMaxLength(){
+    public function getDefaultMaxLength()
+    {
         return 11;
     }
+
     /**
      * @inherit
      *
-     * {@inheritDoc}
+     * {@inheritdoc}
      * {@inherit}
      */
-    public function validateMaxLength($max){
+    public function validateMaxLength($max)
+    {
         // <ABE13> \\
-        if($max>256) throw new ABException('The given length is exceed the available max length.',13);
+        if ($max > 256) {
+            throw new ABException('The given length is exceed the available max length.', 13);
+        }
     }
 }

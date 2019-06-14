@@ -4,52 +4,63 @@ namespace WhizSid\ArrayBase\AB\Table\DataType;
 
 use WhizSid\ArrayBase\ABException;
 
-class VarChar implements DataType{
-    
+class VarChar implements DataType
+{
     /**
      * @inherit
      *
-     * {@inheritDoc}
+     * {@inheritdoc}
      * {@inherit}
      */
-    public function validate($str){
+    public function validate($str)
+    {
         return is_string($str);
     }
+
     /**
      * @inherit
      *
-     * {@inheritDoc}
+     * {@inheritdoc}
      * {@inherit}
      */
-    public function format($str){
+    public function format($str)
+    {
         return (string) $str;
     }
+
     /**
      * @inherit
      *
-     * {@inheritDoc}
+     * {@inheritdoc}
      * {@inherit}
      */
-    public function getName(){
+    public function getName()
+    {
         return 'varchar';
     }
+
     /**
      * @inherit
      *
-     * {@inheritDoc}
+     * {@inheritdoc}
      * {@inherit}
      */
-    public function getDefaultMaxLength(){
+    public function getDefaultMaxLength()
+    {
         return 45;
     }
+
     /**
      * @inherit
      *
-     * {@inheritDoc}
+     * {@inheritdoc}
      * {@inherit}
      */
-    public function validateMaxLength($max){
+    public function validateMaxLength($max)
+    {
         // <ABE14> \\
-        if($max>500) throw new ABException('The given length is exceed the available max length.',14);
+        if ($max > 500) {
+            throw new ABException('The given length is exceed the available max length.', 14);
+        }
     }
 }
