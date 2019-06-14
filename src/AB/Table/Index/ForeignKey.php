@@ -2,8 +2,7 @@
 
 namespace WhizSid\ArrayBase\AB\Table\Index;
 
-class ForeignKey {
+class ForeignKey
+{
     protected $foreignKey;
-
-    
 }

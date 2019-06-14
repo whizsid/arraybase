@@ -1,83 +1,91 @@
 <?php
+
 namespace WhizSid\ArrayBase\Tests;
 
-use WhizSid\ArrayBase\Helper;
 use WhizSid\ArrayBase\ABException;
 use WhizSid\ArrayBase\ABTestCase;
+use WhizSid\ArrayBase\Helper;
 
-class HelperTest extends ABTestCase {
+class HelperTest extends ABTestCase
+{
+    public function testParseDataArray()
+    {
+        $arr = [
+            [
+                'column_test'    => 'Test Data',
+                'column_test_int'=> 1,
+            ],
+        ];
 
-	public function testParseDataArray(){
-		$arr = [
-			[
-				"column_test"=>"Test Data",
-				"column_test_int"=>1
-			]
-		];
+        $dataSet = Helper::parseDataArray($arr);
 
-		$dataSet = Helper::parseDataArray($arr);
+        $this->assertTrue(Helper::isDataSet($dataSet));
+    }
 
-		$this->assertTrue(Helper::isDataSet($dataSet));
-	}
+    public function testInvalidDataArrayParse()
+    {
+        $arr = [[['jnj'=>'jnj']]];
 
-	public function testInvalidDataArrayParse(){
-		$arr = [[['jnj'=>'jnj']]];
+        $this->expectException(ABException::class);
+        $this->expectExceptionCode(17);
 
-		$this->expectException(ABException::class);
-		$this->expectExceptionCode(17);
+        Helper::parseDataArray($arr);
+    }
 
-		Helper::parseDataArray($arr);
+    public function testParseTable()
+    {
+        $table = Helper::parseTable($this->ab, 'tst_tbl', [[
+            'tst_id'    => 1,
+            'tst_column'=> 'Test value',
+        ]]);
 
-	}
+        $this->assertTrue(Helper::isTable($table));
+    }
 
-	public function testParseTable(){
-		$table = Helper::parseTable($this->ab,'tst_tbl',[[
-			'tst_id'=>1,
-			'tst_column'=>"Test value"
-		]]);
+    public function testPascalCase()
+    {
+        $str = 'tst_string';
 
-		$this->assertTrue(Helper::isTable($table));
-	}
+        $pascal = Helper::pascalCase($str);
 
-	public function testPascalCase(){
-		$str = 'tst_string';
+        $firstLetter = substr($pascal, 0, 1);
+        $fourthLetter = substr($pascal, 3, 1);
 
-		$pascal = Helper::pascalCase($str);
+        $this->assertTrue($firstLetter == 'T');
+        $this->assertTrue($fourthLetter == 'S');
+    }
 
-		$firstLetter = substr($pascal,0,1);
-		$fourthLetter = substr($pascal,3,1);
+    public function testFunction()
+    {
+        $this->createTestTable();
 
-		$this->assertTrue($firstLetter=='T');
-		$this->assertTrue($fourthLetter=='S');
-	}
+        $func = $this->ab::concat($this->ab->test->testColumn, $this->ab->test->testSecondColumn);
 
-	public function testFunction(){
-		$this->createTestTable();
+        $this->assertTrue(Helper::isFunction($func));
+    }
 
-		$func = $this->ab::concat($this->ab->test->testColumn,$this->ab->test->testSecondColumn);
+    public function testAgregate()
+    {
+        $this->createTestTable();
 
-		$this->assertTrue(Helper::isFunction($func));
-	}
+        $func = $this->ab::groupConcat($this->ab->test->testColumn)->separatedBy(' ,');
 
-	public function testAgregate(){
-		$this->createTestTable();
+        $this->assertTrue(Helper::isAgregate($func));
+    }
 
-		$func = $this->ab::groupConcat($this->ab->test->testColumn)->separatedBy(" ,");
+    public function testAgregateIsFunction()
+    {
+        $this->createTestTable();
 
-		$this->assertTrue(Helper::isAgregate($func));
-	}
+        $func = $this->ab::groupConcat($this->ab->test->testColumn)->separatedBy(' ,');
 
-	public function testAgregateIsFunction(){
-		$this->createTestTable();
+        $this->assertTrue(Helper::isFunction($func));
+    }
 
-		$func = $this->ab::groupConcat($this->ab->test->testColumn)->separatedBy(" ,");
+    public function testStatics()
+    {
+        $this->createTestTable();
 
-		$this->assertTrue(Helper::isFunction($func));
-	}
-
-	public function testStatics(){
-		$this->createTestTable();
-
-		$this->assertTrue(Helper::isColumn($this->ab->test->testColumn));
-	}
+        $this->assertTrue(Helper::isColumn($this->ab->test->testColumn));
+    }
 }

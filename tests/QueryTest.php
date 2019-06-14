@@ -1,52 +1,58 @@
 <?php
+
 namespace WhizSid\ArrayBase\Tests;
 
 use WhizSid\ArrayBase\ABTestCase;
-use WhizSid\ArrayBase\Query;
 use WhizSid\ArrayBase\Helper;
+use WhizSid\ArrayBase\Query;
 
-class QueryTest extends ABTestCase {
-	/**
-	 * Query to test
-	 *
-	 * @var Query
-	 */
-	protected $query;
+class QueryTest extends ABTestCase
+{
+    /**
+     * Query to test.
+     *
+     * @var Query
+     */
+    protected $query;
 
-	public function __construct()
-	{
-		parent::__construct();
+    public function __construct()
+    {
+        parent::__construct();
 
-		$this->query = new Query();
+        $this->query = new Query();
 
-		$this->query->setAB($this->ab);
-	}
+        $this->query->setAB($this->ab);
+    }
 
-	public function testSelect(){
-		$this->createTestTable();
+    public function testSelect()
+    {
+        $this->createTestTable();
 
-		$selectQuery = $this->query->select($this->ab->test,$this->ab->test->testColumn);
+        $selectQuery = $this->query->select($this->ab->test, $this->ab->test->testColumn);
 
-		$this->assertTrue(Helper::isSelectQuery($selectQuery));
-	}
+        $this->assertTrue(Helper::isSelectQuery($selectQuery));
+    }
 
-	public function testUpdate(){
-		$this->createTestTable();
+    public function testUpdate()
+    {
+        $this->createTestTable();
 
-		$updateQuery = $this->query->update($this->ab->test);
+        $updateQuery = $this->query->update($this->ab->test);
 
-		$this->assertTrue(Helper::isUpdateQuery($updateQuery));
-	}
+        $this->assertTrue(Helper::isUpdateQuery($updateQuery));
+    }
 
-	public function testInsert(){
-		$this->createTestTable();
+    public function testInsert()
+    {
+        $this->createTestTable();
 
-		$insertQuery = $this->query->insert();
+        $insertQuery = $this->query->insert();
 
-		$this->assertTrue(Helper::isInsertQuery($insertQuery));
-	}
+        $this->assertTrue(Helper::isInsertQuery($insertQuery));
+    }
 
-	public function testDelete(){
+    public function testDelete()
+    {
         $this->createTestTable();
 
         $deleteQuery = $this->query->delete($this->ab->test);

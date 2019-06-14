@@ -1,62 +1,70 @@
 <?php
+
 namespace WhizSid\ArrayBase\Query\Traits;
 
 use WhizSid\ArrayBase\AB\DataSet;
+
 /**
  * @property DataSet $dataSet
  */
-trait Limitable {
-	/**
-	 * How many rows selecting
-	 *
-	 * @var int
-	 */
-    protected $limit;
-	/**
-	 * Offset for limit clause
-	 *
-	 * @var int
-	 */
-	protected $offset;
-	/**
-	 * Weather that query is limited or not
-	 *
-	 * @var boolean
-	 */
-	protected $limited = false;
+trait Limitable
+{
     /**
-     * Limiting Results
+     * How many rows selecting.
      *
-     * @param integer $limit
-     * @param integer $offset
+     * @var int
+     */
+    protected $limit;
+    /**
+     * Offset for limit clause.
+     *
+     * @var int
+     */
+    protected $offset;
+    /**
+     * Weather that query is limited or not.
+     *
+     * @var bool
+     */
+    protected $limited = false;
+
+    /**
+     * Limiting Results.
+     *
+     * @param int $limit
+     * @param int $offset
+     *
      * @return self
      */
-    public function limit($limit,$offset=0){
+    public function limit($limit, $offset = 0)
+    {
         $this->limit = $limit;
-		$this->offset = $offset;
-		$this->limited = true;
+        $this->offset = $offset;
+        $this->limited = true;
+
         return $this;
-	}
-	/**
-	 * Executing the limit clause
-	 */
-	public function executeLimit(){
-		if(!$this->limited)
-			return null;
-		/** @var DataSet $dataSet */
-		$dataSet = $this->dataSet;
+    }
 
-		$rows = $dataSet->__getRows();
-		$newRows = [];
+    /**
+     * Executing the limit clause.
+     */
+    public function executeLimit()
+    {
+        if (!$this->limited) {
+            return;
+        }
+        /** @var DataSet $dataSet */
+        $dataSet = $this->dataSet;
 
-		for ($i=$this->offset; $i < $this->offset + $this->limit; $i++) { 
+        $rows = $dataSet->__getRows();
+        $newRows = [];
 
-			if(isset($rows[$i])){
-				$newRows[] = $rows[$i];
-			}
-		}
+        for ($i = $this->offset; $i < $this->offset + $this->limit; $i++) {
+            if (isset($rows[$i])) {
+                $newRows[] = $rows[$i];
+            }
+        }
 
-		$dataSet->__setRows($newRows);
-
-	}
+        $dataSet->__setRows($newRows);
+    }
 }
