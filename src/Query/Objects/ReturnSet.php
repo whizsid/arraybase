@@ -58,8 +58,8 @@ class ReturnSet
     public function getAffectedRowsCount()
     {
         return $this->affectedRows;
-	}
-	
+    }
+
     /**
      * Setter for affected row count.
      *

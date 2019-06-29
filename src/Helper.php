@@ -176,7 +176,7 @@ class Helper
      *
      * @param ABFunction $func
      *
-     * @return boolean
+     * @return bool
      */
     public static function isFunction($func)
     {
@@ -188,7 +188,7 @@ class Helper
      *
      * @param Agregate $func
      *
-     * @return boolean
+     * @return bool
      */
     public static function isAgregate($func)
     {
