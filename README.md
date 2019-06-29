@@ -8,6 +8,7 @@
 <a href="https://packagist.org/packages/whizsid/arraybase"><img src="https://img.shields.io/packagist/dt/whizsid/arraybase.svg" alt="Total Downloads"></a>
 <a href="https://packagist.org/packages/whizsid/arraybase"><img src="https://img.shields.io/packagist/v/whizsid/arraybase.svg" alt="Latest Stable Version"></a>
 <a href="https://travis-ci.com/whizsid/arraybase"><img src="https://travis-ci.com/whizsid/arraybase.svg?branch=master" alt="Build: parsing"></a>
+<a href="https://github.styleci.io/repos/161219266"><img src="https://github.styleci.io/repos/161219266/shield" alt="Style CI: parsed"></a>
 </p>
 
 Runtime SQL like query lanaguage for manipulate php arrays. written in pure php and not using any sql engine. Note:- this is not an any kind of query builder.

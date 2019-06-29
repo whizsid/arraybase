@@ -1,6 +1,7 @@
 <?php
+
 namespace WhizSid\ArrayBase\Query\Clauses;
 
-class On extends Where {
-    
+class On extends Where
+{
 }

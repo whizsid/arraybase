@@ -1,147 +1,163 @@
 <?php
+
 namespace WhizSid\ArrayBase\Query\Type;
 
+use WhizSid\ArrayBase\AB\DataSet;
+use WhizSid\ArrayBase\AB\DataSet\Row;
 use WhizSid\ArrayBase\AB\Table;
 use WhizSid\ArrayBase\AB\Table\Column;
+use WhizSid\ArrayBase\AB\Traits\KeepDataSet;
+use WhizSid\ArrayBase\Query\Interfaces\QueryType;
+use WhizSid\ArrayBase\Query\Objects\GroupedDataSet;
+use WhizSid\ArrayBase\Query\Objects\Parser;
+use WhizSid\ArrayBase\Query\Objects\ReturnSet;
+use WhizSid\ArrayBase\Query\Traits\Groupable;
 use WhizSid\ArrayBase\Query\Traits\Joinable;
-use WhizSid\ArrayBase\Query\Traits\Whereable;
 use WhizSid\ArrayBase\Query\Traits\Limitable;
 use WhizSid\ArrayBase\Query\Traits\Orderable;
-use WhizSid\ArrayBase\Query\Traits\Groupable;
-use WhizSid\ArrayBase\Query\Interfaces\QueryType;
-use WhizSid\ArrayBase\AB\Traits\KeepDataSet;
-use WhizSid\ArrayBase\Query\Objects\GroupedDataSet;
-use WhizSid\ArrayBase\AB\DataSet;
-use WhizSid\ArrayBase\Query\Objects\Parser;
-use WhizSid\ArrayBase\AB\DataSet\Row;
+use WhizSid\ArrayBase\Query\Traits\Whereable;
 use WhizSid\ArrayBase\Query\Type;
-use WhizSid\ArrayBase\Query\Objects\ReturnSet;
 
-class Select extends Type implements QueryType{
-	use Joinable,Whereable,Limitable,Orderable,Groupable,KeepDataSet;
+class Select extends Type implements QueryType
+{
+    use Joinable,Whereable,Limitable,Orderable,Groupable,KeepDataSet;
     /**
-     * Table tha in from clause
+     * Table tha in from clause.
      *
      * @var Table
      */
     protected $table;
     /**
-     * Columns that we are selecting
+     * Columns that we are selecting.
      *
      * @var Column[]
      */
-    protected $columns=[];
+    protected $columns = [];
+
     /**
-     * Setting a base table
-     * 
+     * Setting a base table.
+     *
      * @param Table $tbl
      */
-    public function setFrom($tbl){
+    public function setFrom($tbl)
+    {
         $this->table = $tbl;
         // Registering the table
         $this->query->addTable($tbl);
+
         return $this;
     }
+
     /**
-     * Returning the base table
+     * Returning the base table.
      *
      * @return Table
      */
-    public function getFrom(){
+    public function getFrom()
+    {
         return $this->table;
     }
+
     /**
-     * Setting columns in select clause
+     * Setting columns in select clause.
      *
      * @param Column[] ...$columns
+     *
      * @return void
      */
-    public function setColumns(...$columns){
-        $this->columns = array_merge($this->columns,$columns);
+    public function setColumns(...$columns)
+    {
+        $this->columns = array_merge($this->columns, $columns);
+
         return $this;
     }
+
     /**
-     * Returning the columns
+     * Returning the columns.
      *
      * @return Column[]
      */
-    public function getColumns(){
+    public function getColumns()
+    {
         return $this->columns;
-	}
-	/**
-	 * @inheritDoc
-	 */
-	public function execute(){
-		$startTime = \microtime(true);
-		$this->resolveDataSet();
+    }
 
-		$this->executeJoin();
-		$this->executeWhere();
-		$this->executeOrder();
-		$this->executeGroupBy();
-		$this->executeSelect();
-		$this->executeLimit();
+    /**
+     * {@inheritdoc}
+     */
+    public function execute()
+    {
+        $startTime = \microtime(true);
+        $this->resolveDataSet();
 
-		$endTime = \microtime(true);
+        $this->executeJoin();
+        $this->executeWhere();
+        $this->executeOrder();
+        $this->executeGroupBy();
+        $this->executeSelect();
+        $this->executeLimit();
 
-		$returnSet = new ReturnSet();
-		$returnSet->setDataSet($this->dataSet);
-		$returnSet->setTime($endTime-$startTime);
+        $endTime = \microtime(true);
 
-		return $returnSet;
-	}
+        $returnSet = new ReturnSet();
+        $returnSet->setDataSet($this->dataSet);
+        $returnSet->setTime($endTime - $startTime);
 
-	public function executeSelect(){
-		$columns = $this->columns;
+        return $returnSet;
+    }
 
-		$dataSet = new DataSet();
+    public function executeSelect()
+    {
+        $columns = $this->columns;
 
-		$columns = $this->columns;
+        $dataSet = new DataSet();
 
-		if(empty($columns)){
-			$columns = array_values($this->table->getColumns());
+        $columns = $this->columns;
 
-			foreach ($this->joins as $key => $join) {
-				$table = $join->getTable();
+        if (empty($columns)) {
+            $columns = array_values($this->table->getColumns());
 
-				$joinedTableColumns = array_values($table->getColumns());
+            foreach ($this->joins as $key => $join) {
+                $table = $join->getTable();
 
-				$columns = array_merge($columns,$joinedTableColumns);
-			}
-		}
+                $joinedTableColumns = array_values($table->getColumns());
 
-		foreach($columns as $column){
-			$dataSet->newColumn(Parser::parseName($column));
-		}
+                $columns = array_merge($columns, $joinedTableColumns);
+            }
+        }
 
-		$rows = [];
+        foreach ($columns as $column) {
+            $dataSet->newColumn(Parser::parseName($column));
+        }
 
-		if($this->grouped){
-			/** @var GroupedDataSet $groupedSet */
-			foreach($this->groupedSets as $key=>$groupedSet){
-				$row = new Row();
-				$row->setDataSet($dataSet);
-				$row->setIndex($key);
-				foreach($columns as $column){
-					$row->newCell($groupedSet->getValue($column));
-				}
-				$rows[] = $row;
-			}
-		} else {
-			$count = $this->dataSet->getCount();
+        $rows = [];
 
-			for ($i=0; $i < $count; $i++) { 
-				$row = new Row();
-				$row->setDataSet($dataSet);
-				$row->setIndex($i);
-				foreach($columns as $column){
-					$row->newCell($this->dataSet->getValue($column,$i));
-				}
-				$rows[] = $row;
-			}
-		}
+        if ($this->grouped) {
+            /** @var GroupedDataSet $groupedSet */
+            foreach ($this->groupedSets as $key=>$groupedSet) {
+                $row = new Row();
+                $row->setDataSet($dataSet);
+                $row->setIndex($key);
+                foreach ($columns as $column) {
+                    $row->newCell($groupedSet->getValue($column));
+                }
+                $rows[] = $row;
+            }
+        } else {
+            $count = $this->dataSet->getCount();
 
-		$dataSet->__setRows($rows);
-		$this->dataSet= $dataSet;
-	}
+            for ($i = 0; $i < $count; $i++) {
+                $row = new Row();
+                $row->setDataSet($dataSet);
+                $row->setIndex($i);
+                foreach ($columns as $column) {
+                    $row->newCell($this->dataSet->getValue($column, $i));
+                }
+                $rows[] = $row;
+            }
+        }
+
+        $dataSet->__setRows($rows);
+        $this->dataSet = $dataSet;
+    }
 }
