@@ -142,4 +142,6 @@ All Examples in the `example/index.php` file.
 
 To bring all MySQL functions to PHP.
 
+[Read the full documentation](https://whizsid.github.io/arraybase)
+
 
