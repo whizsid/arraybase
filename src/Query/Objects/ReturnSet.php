@@ -88,6 +88,14 @@ class ReturnSet {
 		return $this->lastIndex;
 	}
 	/**
+	 * Returning the count of affected rows by the query
+	 *
+	 * @return int
+	 */
+	public function getAffectedRowsCount(){
+		return $this->affectedRows;
+	}
+	/**
 	 * Fetching the data set to associative array
 	 *
 	 * @return void
