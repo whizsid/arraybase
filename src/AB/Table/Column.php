@@ -20,7 +20,7 @@ class Column extends KeepTable
     /**
      * Use When a column is auto increment.
      *
-     * @var boolean
+     * @var bool
      */
     protected $autoIncrement = false;
     /**
@@ -32,13 +32,13 @@ class Column extends KeepTable
     /**
      * Is free to put null values in this column.
      *
-     * @var boolean
+     * @var bool
      */
     protected $nullable = true;
     /**
      * Max length for a column in byte.
      *
-     * @var integer
+     * @var int
      */
     protected $maxLength;
     /**
@@ -254,7 +254,7 @@ class Column extends KeepTable
     /**
      * Determine the column has set to auto increment.
      *
-     * @return boolean
+     * @return bool
      */
     public function isAutoIncrement()
     {
@@ -284,7 +284,7 @@ class Column extends KeepTable
     /**
      * Determine the weather the column has nullable attribute or not.
      *
-     * @return boolean
+     * @return bool
      */
     public function isNullable()
     {
