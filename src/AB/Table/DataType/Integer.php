@@ -47,7 +47,7 @@ class Integer implements DataType
      */
     public function getDefaultMaxLength()
     {
-        return 11;
+        return 140;
     }
 
     /**
